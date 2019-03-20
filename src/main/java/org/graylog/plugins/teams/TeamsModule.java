@@ -1,5 +1,6 @@
 package org.graylog.plugins.teams;
 
+import org.graylog.plugins.teams.alerts.TeamsNotification;
 import org.graylog2.plugin.PluginConfigBean;
 import org.graylog2.plugin.PluginModule;
 
@@ -41,5 +42,6 @@ public class TeamsModule extends PluginModule {
      *
      * addConfigBeans();
      */
+    addAlarmCallback(TeamsNotification.class);
   }
 }

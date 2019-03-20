@@ -41,8 +41,7 @@ public class TeamsMetaData implements PluginMetaData {
 
     @Override
     public String getDescription() {
-        // TODO Insert correct plugin description
-        return "Description of Teams plugin";
+        return "Microsoft Teams plugin";
     }
 
     @Override
