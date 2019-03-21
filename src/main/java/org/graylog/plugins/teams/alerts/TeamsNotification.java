@@ -1,8 +1,7 @@
 package org.graylog.plugins.teams.alerts;
 
-import java.util.Map;
 import org.graylog.plugins.teams.client.TeamsClient;
-import org.graylog.plugins.teams.client.TeamsWebhookRequest;
+import org.graylog.plugins.teams.client.TeamsMessageCard;
 import org.graylog2.plugin.alarms.AlertCondition;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallback;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackConfigurationException;
@@ -14,6 +13,8 @@ import org.graylog2.plugin.configuration.fields.ConfigurationField.Optional;
 import org.graylog2.plugin.configuration.fields.TextField;
 import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
+
+import java.util.Map;
 
 /**
  * This is the plugin. Your class should implement one of the existing plugin
@@ -32,8 +33,11 @@ public class TeamsNotification implements AlarmCallback {
   @Override
   public void call(Stream stream, AlertCondition.CheckResult result) throws AlarmCallbackException {
     TeamsClient client = new TeamsClient(configuration);
-    TeamsWebhookRequest req = new TeamsWebhookRequest(
-        configuration.getString(TeamsNotificationConfig.MESSAGE));
+    TeamsMessageCard req = new TeamsMessageCard(
+        configuration.getString(TeamsNotificationConfig.COLOR),
+        configuration.getString(TeamsNotificationConfig.MSG_TILTE),
+        configuration.getString(TeamsNotificationConfig.MESSAGE)
+    );
     client.send(req);
   }
 
@@ -45,7 +49,14 @@ public class TeamsNotification implements AlarmCallback {
         TeamsNotificationConfig.WEBHOOK_URL, "Webhook URL", "",
         "Microsoft Teams Incoming Webhook URL", Optional.NOT_OPTIONAL));
 
-    // TODO: For now just support simple text message but should support rich message
+    configRequest.addField(new TextField(
+        TeamsNotificationConfig.COLOR, "Color", "0076D7",
+        "Color code", Optional.NOT_OPTIONAL));
+
+    configRequest.addField(new TextField(
+        TeamsNotificationConfig.MSG_TILTE, "Title", "Graylog Alarm Callback",
+        "Message title", Optional.NOT_OPTIONAL));
+
     configRequest.addField(new TextField(
         TeamsNotificationConfig.MESSAGE, "Message", "",
         "Notification message", Optional.NOT_OPTIONAL, Attribute.TEXTAREA));
