@@ -6,7 +6,7 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_ConvertToJsonString() {
-//    TeamsMessageCard sut = new TeamsMessageCard("test message");
+//    TeamsMessageCard sut = new TeamsMessageCard("ffffff", "Title", "text");
 //    String expected = "{\"text\":\"test message\"}";
 //
 //    String actual = sut.toJsonString();

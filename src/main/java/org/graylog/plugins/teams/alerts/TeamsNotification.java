@@ -35,8 +35,8 @@ public class TeamsNotification implements AlarmCallback {
     TeamsClient client = new TeamsClient(configuration);
     TeamsMessageCard req = new TeamsMessageCard(
         configuration.getString(TeamsNotificationConfig.COLOR),
-        configuration.getString(TeamsNotificationConfig.MSG_TILTE),
-        configuration.getString(TeamsNotificationConfig.MESSAGE)
+        "Alert for Graylog stream: " + stream.getTitle(),
+        result.getResultDescription()
     );
     client.send(req);
   }
@@ -54,12 +54,8 @@ public class TeamsNotification implements AlarmCallback {
         "Color code", Optional.NOT_OPTIONAL));
 
     configRequest.addField(new TextField(
-        TeamsNotificationConfig.MSG_TILTE, "Title", "Graylog Alarm Callback",
-        "Message title", Optional.NOT_OPTIONAL));
-
-    configRequest.addField(new TextField(
-        TeamsNotificationConfig.MESSAGE, "Message", "",
-        "Notification message", Optional.NOT_OPTIONAL, Attribute.TEXTAREA));
+        TeamsNotificationConfig.CUSTOM_MESSAGE, "Custom Message", "",
+        "Notification message", Optional.OPTIONAL, Attribute.TEXTAREA));
 
     configRequest.addField(new TextField(
         TeamsNotificationConfig.PROXY, "Proxy", "",
@@ -79,7 +75,5 @@ public class TeamsNotification implements AlarmCallback {
   }
 
   @Override
-  public void checkConfiguration() throws ConfigurationException {
-
-  }
+  public void checkConfiguration() throws ConfigurationException {}
 }

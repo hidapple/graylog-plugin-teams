@@ -2,15 +2,14 @@ package org.graylog.plugins.teams.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TeamsMessageCard {
 
-  private static String TYPE = "MessageCart";
-  private static String CONTEXT = "https://schema.org/extensions";
+  private String type = "MessageCart";
+  private String context = "https://schema.org/extensions";
   private String themeColor;
   private String title;
   private String text;
@@ -23,8 +22,8 @@ public class TeamsMessageCard {
 
   public String toJsonString() {
     Map<String, Object> params = new HashMap<>();
-    params.put("@type", TYPE);
-    params.put("@context", CONTEXT);
+    params.put("@type", type);
+    params.put("@context", context);
     params.put("themeColor", themeColor);
     params.put("title", title);
     params.put("text", text);
@@ -45,9 +44,6 @@ public class TeamsMessageCard {
   }
 
   private void setText(String text) {
-    if (StringUtils.isEmpty(text)) {
-      throw new IllegalArgumentException("Text field cannot be null or empty.");
-    }
     this.text = text;
   }
 }
