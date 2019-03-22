@@ -1,10 +1,16 @@
 package org.graylog.plugins.teams.client;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.google.common.collect.Lists;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 
 public class TeamsMessageCard {
 
@@ -13,11 +19,16 @@ public class TeamsMessageCard {
   private String themeColor;
   private String title;
   private String text;
+  private List<Section> sections;
 
-  public TeamsMessageCard(String color, String title, String text) {
-    this.setThemeColor(color);
-    this.setTitle(title);
-    this.setText(text);
+  public TeamsMessageCard(String color, String title, String text, String customMsg) {
+    this.themeColor = color;
+    this.title = title;
+    this.text = text;
+    if (!StringUtils.isEmpty(customMsg)) {
+      List<Fact> facts = Lists.newArrayList(new Fact("Message", customMsg));
+      this.sections = Lists.newArrayList(new Section(facts));
+    }
   }
 
   public String toJsonString() {
@@ -27,6 +38,7 @@ public class TeamsMessageCard {
     params.put("themeColor", themeColor);
     params.put("title", title);
     params.put("text", text);
+    params.put("sections", sections);
 
     try {
       return new ObjectMapper().writeValueAsString(params);
@@ -35,15 +47,27 @@ public class TeamsMessageCard {
     }
   }
 
-  private void setThemeColor(String color) {
-    this.themeColor = color;
+  @JsonInclude(Include.NON_NULL)
+  public static class Section {
+    public List<Fact> facts;
+
+    @JsonCreator
+    public Section(List<Fact> facts) {
+      this.facts = facts;
+    }
   }
 
-  private void setTitle(String title) {
-    this.title = title;
-  }
+  @JsonInclude(Include.NON_NULL)
+  public static class Fact {
+    @JsonProperty
+    public String name;
+    @JsonProperty
+    public String value;
 
-  private void setText(String text) {
-    this.text = text;
+    @JsonCreator
+    public Fact(String name, String value) {
+      this.name = name;
+      this.value = value;
+    }
   }
 }
