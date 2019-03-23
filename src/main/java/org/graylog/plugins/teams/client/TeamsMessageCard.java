@@ -21,13 +21,12 @@ public class TeamsMessageCard {
   private String text;
   private List<Section> sections;
 
-  public TeamsMessageCard(String color, String title, String text, String customMsg) {
+  public TeamsMessageCard(String color, String title, String text, String detailMsg) {
     this.themeColor = color;
     this.title = title;
     this.text = text;
-    if (!StringUtils.isEmpty(customMsg)) {
-      List<Fact> facts = Lists.newArrayList(new Fact("Message", customMsg));
-      this.sections = Lists.newArrayList(new Section(facts));
+    if (!StringUtils.isEmpty(detailMsg)) {
+      this.sections = Lists.newArrayList(new Section("Detail Message:", detailMsg));
     }
   }
 
@@ -49,25 +48,15 @@ public class TeamsMessageCard {
 
   @JsonInclude(Include.NON_NULL)
   public static class Section {
-    public List<Fact> facts;
+    @JsonProperty
+    public String title;
+    @JsonProperty
+    public String text;
 
     @JsonCreator
-    public Section(List<Fact> facts) {
-      this.facts = facts;
-    }
-  }
-
-  @JsonInclude(Include.NON_NULL)
-  public static class Fact {
-    @JsonProperty
-    public String name;
-    @JsonProperty
-    public String value;
-
-    @JsonCreator
-    public Fact(String name, String value) {
-      this.name = name;
-      this.value = value;
+    public Section(String title, String text) {
+      this.title = title;
+      this.text = text;
     }
   }
 }

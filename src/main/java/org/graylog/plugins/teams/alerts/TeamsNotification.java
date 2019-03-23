@@ -28,8 +28,8 @@ import org.graylog2.plugin.streams.Stream;
  */
 public class TeamsNotification implements AlarmCallback {
 
-  private Configuration configuration;
   private final Engine engine = new Engine();
+  private Configuration configuration;
 
   @Override
   public void initialize(Configuration config) throws AlarmCallbackConfigurationException {
@@ -44,7 +44,7 @@ public class TeamsNotification implements AlarmCallback {
         configuration.getString(TeamsNotificationConfig.COLOR),
         "Alert for Graylog stream: " + stream.getTitle(),
         result.getResultDescription(),
-        buildCustomMsg(stream, result, configuration.getString(TeamsNotificationConfig.CUSTOM_MESSAGE))
+        buildDetailMsg(stream, result, configuration.getString(TeamsNotificationConfig.DETAIL_MESSAGE))
     );
     client.send(req);
   }
@@ -66,14 +66,28 @@ public class TeamsNotification implements AlarmCallback {
         Optional.NOT_OPTIONAL));
 
     configRequest.addField(new TextField(
-        TeamsNotificationConfig.CUSTOM_MESSAGE, "Custom Message",
-        "",
-        "Notification message",
+        TeamsNotificationConfig.DETAIL_MESSAGE, "Detail Message",
+        "Alert Description: ${check_result.resultDescription}  \n" +
+            "Date: ${check_result.triggeredAt}  \n" +
+            "Stream ID: ${stream.id}  \n" +
+            "Stream title: ${stream.title}  \n" +
+            "Stream description: ${stream.description}  \n" +
+            "Alert Condition Title: ${alert_condition.title}  \n" +
+            "${if stream_url}Stream URL: ${stream_url}  ${end}\n" +
+            "Triggered condition: ${check_result.triggeredCondition}  \n" +
+            "${if backlog}" +
+            "${foreach backlog message}" +
+            "${message}\n\n" +
+            "${end}" +
+            "${else}" +
+            "<No backlog>\n" +
+            "${end}",
+        "Detail message supposed to be Markdown format.",
         Optional.OPTIONAL,
         Attribute.TEXTAREA));
 
     configRequest.addField(new TextField(
-        TeamsNotificationConfig.PROXY, "Proxy",
+        TeamsNotificationConfig.PROXY, "Proxy URL",
         "",
         "Proxy URL",
         Optional.OPTIONAL));
@@ -92,16 +106,16 @@ public class TeamsNotification implements AlarmCallback {
   }
 
   @Override
-  public void checkConfiguration() throws ConfigurationException {}
+  public void checkConfiguration() throws ConfigurationException {
+  }
 
-  private String buildCustomMsg(Stream stream, AlertCondition.CheckResult result, String template) {
+  private String buildDetailMsg(Stream stream, AlertCondition.CheckResult result, String template) {
     List<Message> backlog = extractBacklog(result);
     Map<String, Object> model = getModel(stream, result, backlog);
     try {
       return engine.transform(template, model);
     } catch (Exception ex) {
       // In case of exception, just output exception message as custom message.
-      ex.printStackTrace();
       return ex.toString();
     }
   }
