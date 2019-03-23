@@ -1,14 +1,19 @@
 package org.graylog.plugins.teams.client;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.text.MessageFormat;
 import org.apache.commons.lang.StringUtils;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackException;
 import org.graylog2.plugin.configuration.Configuration;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.*;
-import java.net.Proxy.Type;
-import java.text.MessageFormat;
 
 public class TeamsClient {
 

@@ -1,6 +1,7 @@
 package org.graylog.plugins.teams.client;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,18 +11,25 @@ import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * MessageCard is representing Outlook Actionable Message Card request.
+ * https://docs.microsoft.com/en-us/outlook/actionable-messages/message-card-reference
+ */
 public class TeamsMessageCard {
 
-  private String type = "MessageCart";
-  private String context = "https://schema.org/extensions";
+  private String type;
+  private String context;
   private String themeColor;
   private String title;
   private String text;
   private List<Section> sections;
 
   public TeamsMessageCard(String color, String title, String text, String detailMsg) {
+    this.type = "MessageCard";
+    this.context = "https://schema.org/extensions";
     this.themeColor = color;
     this.title = title;
     this.text = text;
@@ -37,20 +45,23 @@ public class TeamsMessageCard {
     params.put("themeColor", themeColor);
     params.put("title", title);
     params.put("text", text);
-    params.put("sections", sections);
+    if (Objects.nonNull(this.sections)) {
+      params.put("sections", sections);
+    }
 
     try {
       return new ObjectMapper().writeValueAsString(params);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException("Failed to build request payload as JSON format.");
+      throw new RuntimeException("Failed to build Teams MessageCard payload as JSON format.");
     }
   }
 
   @JsonInclude(Include.NON_NULL)
+  @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Section {
-    @JsonProperty
+    @JsonProperty("title")
     public String title;
-    @JsonProperty
+    @JsonProperty("text")
     public String text;
 
     @JsonCreator
