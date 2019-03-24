@@ -2,10 +2,13 @@ package org.graylog.plugins.teams.alerts;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.collect.Lists;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
 import org.graylog2.plugin.Message;
@@ -23,8 +26,7 @@ import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
 
 /**
- * This is the plugin. Your class should implement one of the existing plugin
- * interfaces. (i.e. AlarmCallback, MessageInput, MessageOutput)
+ * TeamsNotification is Graylog Notification(AlarmCallback) Plugin.
  */
 public class TeamsNotification implements AlarmCallback {
 
@@ -33,7 +35,6 @@ public class TeamsNotification implements AlarmCallback {
 
   @Override
   public void initialize(Configuration config) throws AlarmCallbackConfigurationException {
-    // TODO: Check configuration and throw Exception if it's invalid
     this.configuration = config;
   }
 
@@ -63,7 +64,7 @@ public class TeamsNotification implements AlarmCallback {
         TeamsNotificationConfig.COLOR, "Color",
         "0076D7",
         "Color code",
-        Optional.NOT_OPTIONAL));
+        Optional.OPTIONAL));
 
     configRequest.addField(new TextField(
         TeamsNotificationConfig.DETAIL_MESSAGE, "Detail Message",
@@ -107,6 +108,11 @@ public class TeamsNotification implements AlarmCallback {
 
   @Override
   public void checkConfiguration() throws ConfigurationException {
+    if (!configuration.stringIsSet(TeamsNotificationConfig.WEBHOOK_URL)) {
+      throw new ConfigurationException(TeamsNotificationConfig.WEBHOOK_URL + " is is mandatory and must not be empty.");
+    }
+    validateURI(configuration, TeamsNotificationConfig.WEBHOOK_URL);
+    validateURI(configuration, TeamsNotificationConfig.PROXY);
   }
 
   private String buildDetailMsg(Stream stream, AlertCondition.CheckResult result, String template) {
@@ -142,7 +148,15 @@ public class TeamsNotification implements AlarmCallback {
     model.put("alert_condition", result.getTriggeredCondition());
     model.put("backlog", backlog);
     model.put("backlog_size", backlog.size());
-
     return model;
+  }
+
+  private void validateURI(Configuration config,  String field) throws ConfigurationException {
+    if (!config.stringIsSet(field)) return;
+    try {
+      new URI(Objects.requireNonNull(config.getString(field)));
+    } catch (URISyntaxException ex) {
+      throw new ConfigurationException(field + " is not valid as URI");
+    }
   }
 }
