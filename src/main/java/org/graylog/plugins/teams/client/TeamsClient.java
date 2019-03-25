@@ -1,6 +1,7 @@
 package org.graylog.plugins.teams.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -10,32 +11,36 @@ import java.net.Proxy.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.graylog2.plugin.alarms.callbacks.AlarmCallbackException;
+import org.graylog.plugins.teams.alerts.TeamsNotificationConfig;
 import org.graylog2.plugin.configuration.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TeamsClient {
 
-  private final String webhookURL;
+  private static final Logger LOG = LoggerFactory.getLogger(TeamsClient.class);
 
+  private final String webhookURL;
   private final String proxyURL;
 
   public TeamsClient(Configuration config) {
-    this.webhookURL = config.getString("webhook_url");
-    this.proxyURL = config.getString("proxy");
+    this.webhookURL = config.getString(TeamsNotificationConfig.WEBHOOK_URL);
+    this.proxyURL = config.getString(TeamsNotificationConfig.PROXY);
   }
 
-  public void send(TeamsMessageCard request) throws AlarmCallbackException {
+  public void postMessageCard(TeamsMessageCard request) throws TeamsClientException {
     URL url;
     try {
       url = new URL(webhookURL);
     } catch (MalformedURLException ex) {
-      throw new AlarmCallbackException(
+      throw new TeamsClientException(
           MessageFormat.format("Teams webhook URL is invalid format. URL={}", webhookURL), ex);
     }
 
-    // Configure connection
     HttpURLConnection con;
     try {
       if (StringUtils.isEmpty(proxyURL)) {
@@ -49,26 +54,29 @@ public class TeamsClient {
       con.setRequestProperty("Content-Type", "application/json");
       con.setDoOutput(true);
     } catch (URISyntaxException ex) {
-      throw new AlarmCallbackException(
-          MessageFormat.format("Proxy URI is invalid format. URI={}", proxyURL), ex);
+      throw new TeamsClientException(MessageFormat.format("Proxy URI is invalid format. URI={}", proxyURL), ex);
     } catch (IOException ex) {
-      throw new AlarmCallbackException(
-          MessageFormat.format("Failed to open connection to the Teams webhook. URL={}", webhookURL), ex);
+      throw new TeamsClientException(MessageFormat.format("Failed to open connection to the Teams webhook. URL={}", webhookURL), ex);
     }
 
-    // Request body
     try (OutputStreamWriter w = new OutputStreamWriter(con.getOutputStream())) {
+      LOG.debug("HTTP request body={}", request.toJsonString());
       w.write(request.toJsonString());
       w.flush();
 
-      // TODO: Return HTTP response and leave handing response to the caller.
       if (con.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        throw new AlarmCallbackException("Teams webhook returned unexpected response status");
+        if (LOG.isDebugEnabled()) {
+          try (InputStream in = con.getInputStream()) {
+            String res = IOUtils.toString(in, StandardCharsets.UTF_8);
+            LOG.debug("HTTP response body={}", res);
+          } catch (IOException ex) {
+            LOG.debug("Failed to get HTTP response body", ex);
+          }
+        }
+        throw new TeamsClientException("Teams webhook returned unexpected response status. HTTP Status=" + con.getResponseCode());
       }
     } catch (IOException ex) {
-      throw new AlarmCallbackException("Failed to POST the request to the Teams webhook.", ex);
+      throw new TeamsClientException("Failed to send POST request to the Teams webhook.", ex);
     }
-
-    // TODO: Response handling
   }
 }

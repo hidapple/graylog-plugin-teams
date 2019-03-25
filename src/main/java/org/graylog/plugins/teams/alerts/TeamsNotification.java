@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.graylog.plugins.teams.client.TeamsClient;
+import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
 import org.graylog2.plugin.Message;
 import org.graylog2.plugin.MessageSummary;
@@ -24,11 +25,15 @@ import org.graylog2.plugin.configuration.fields.ConfigurationField.Optional;
 import org.graylog2.plugin.configuration.fields.TextField;
 import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TeamsNotification is Graylog Notification(AlarmCallback) Plugin.
  */
 public class TeamsNotification implements AlarmCallback {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TeamsNotification.class);
 
   private final Engine engine = new Engine();
   private Configuration configuration;
@@ -47,7 +52,11 @@ public class TeamsNotification implements AlarmCallback {
         result.getResultDescription(),
         buildDetailMsg(stream, result, configuration.getString(TeamsNotificationConfig.DETAIL_MESSAGE))
     );
-    client.send(req);
+    try {
+      client.postMessageCard(req);
+    } catch(TeamsClientException ex) {
+      throw new AlarmCallbackException("Failed to send POST request to Teams webhook.", ex);
+    }
   }
 
   @Override
@@ -83,7 +92,7 @@ public class TeamsNotification implements AlarmCallback {
             "${else}" +
             "<No backlog>\n" +
             "${end}",
-        "Detail message supposed to be Markdown format.",
+        "Detail message. Basic Markdown syntax is acceptable.",
         Optional.OPTIONAL,
         Attribute.TEXTAREA));
 
@@ -113,6 +122,14 @@ public class TeamsNotification implements AlarmCallback {
     }
     validateURI(configuration, TeamsNotificationConfig.WEBHOOK_URL);
     validateURI(configuration, TeamsNotificationConfig.PROXY);
+
+    // Not error but warning
+    if (configuration.stringIsSet(TeamsNotificationConfig.COLOR)) {
+      String colorCode = configuration.getString(TeamsNotificationConfig.COLOR);
+      if (!colorCode.matches("[0-9a-fA-F]{6}|[0-9a-fA-F]{3}")) {
+        LOG.warn("<{}> is invalid as color code. It will be ignored.", colorCode);
+      }
+    }
   }
 
   private String buildDetailMsg(Stream stream, AlertCondition.CheckResult result, String template) {
@@ -156,7 +173,7 @@ public class TeamsNotification implements AlarmCallback {
     try {
       new URI(Objects.requireNonNull(config.getString(field)));
     } catch (URISyntaxException ex) {
-      throw new ConfigurationException(field + " is not valid as URI");
+      throw new ConfigurationException(field + " is invalid as URI");
     }
   }
 }
