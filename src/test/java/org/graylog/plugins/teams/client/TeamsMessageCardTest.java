@@ -2,10 +2,12 @@ package org.graylog.plugins.teams.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TeamsMessageCardTest {
 
@@ -54,6 +56,6 @@ class TeamsMessageCardTest {
     JsonNode node1 = mapper.readTree(json1);
     JsonNode node2 = mapper.readTree(json2);
 
-    Assertions.assertEquals(node1, node2);
+    assertEquals(node1, node2);
   }
 }

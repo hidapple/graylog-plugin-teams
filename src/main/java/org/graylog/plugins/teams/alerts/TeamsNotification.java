@@ -2,13 +2,6 @@ package org.graylog.plugins.teams.alerts;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.collect.Lists;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
@@ -27,6 +20,10 @@ import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 /**
  * TeamsNotification is Graylog Notification(AlarmCallback) Plugin.
@@ -126,7 +123,7 @@ public class TeamsNotification implements AlarmCallback {
     // Not error but warning
     if (configuration.stringIsSet(TeamsNotificationConfig.COLOR)) {
       String colorCode = configuration.getString(TeamsNotificationConfig.COLOR);
-      if (!colorCode.matches("[0-9a-fA-F]{6}|[0-9a-fA-F]{3}")) {
+      if (!Objects.requireNonNull(colorCode).matches("[0-9a-fA-F]{6}|[0-9a-fA-F]{3}")) {
         LOG.warn("<{}> is invalid as color code. It will be ignored.", colorCode);
       }
     }
