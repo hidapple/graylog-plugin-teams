@@ -1,6 +1,14 @@
 package org.graylog.plugins.teams.alerts;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackConfigurationException;
 import org.graylog2.plugin.configuration.Configuration;
@@ -8,12 +16,6 @@ import org.graylog2.plugin.configuration.ConfigurationException;
 import org.graylog2.plugin.configuration.fields.ConfigurationField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TeamsNotificationTest {
 
@@ -25,7 +27,13 @@ class TeamsNotificationTest {
   }
 
   @Test
-  void call() {
+  void getAttribute() throws AlarmCallbackConfigurationException {
+    Map<String, Object> configMap = createValidConfigMap();
+    sut.initialize(new Configuration(configMap));
+
+    Map<String, Object> actual = sut.getAttributes();
+
+    assertEquals(configMap, actual);
   }
 
   @Test
@@ -37,10 +45,8 @@ class TeamsNotificationTest {
         TeamsNotificationConfig.PROXY
     );
 
-    // When
     Map<String, ConfigurationField> actual = sut.getRequestedConfiguration().getFields();
 
-    // Then
     assertEquals(4, actual.size());
     expectedConfigFields.forEach(
         expected -> assertTrue(actual.containsKey(expected)));
@@ -59,7 +65,7 @@ class TeamsNotificationTest {
 
   @Test
   void checkConfiguration() throws AlarmCallbackConfigurationException {
-    sut.initialize(createValidConfig());
+    sut.initialize(new Configuration(createValidConfigMap()));
     try {
       sut.checkConfiguration();
     } catch (ConfigurationException e) {
@@ -69,7 +75,7 @@ class TeamsNotificationTest {
 
   @Test
   void checkConfiguration_NG_WebhookURLIsEmpty() throws AlarmCallbackConfigurationException {
-    Map<String, Object> m = createValidCofnigMap();
+    Map<String, Object> m = createValidConfigMap();
     m.replace(TeamsNotificationConfig.WEBHOOK_URL, StringUtils.EMPTY);
     sut.initialize(new Configuration(m));
 
@@ -78,7 +84,7 @@ class TeamsNotificationTest {
 
   @Test
   void checkConfiguration_NG_WebhookURLIsInvalid() throws AlarmCallbackConfigurationException {
-    Map<String, Object> m = createValidCofnigMap();
+    Map<String, Object> m = createValidConfigMap();
     m.replace(TeamsNotificationConfig.WEBHOOK_URL, "invalid URL");
     sut.initialize(new Configuration(m));
 
@@ -88,7 +94,7 @@ class TeamsNotificationTest {
 
   @Test
   void checkConfiguration_NG_ProxyURLIsInvalid() throws AlarmCallbackConfigurationException {
-    Map<String, Object> m = createValidCofnigMap();
+    Map<String, Object> m = createValidConfigMap();
     m.replace(TeamsNotificationConfig.PROXY, "invalid URL");
     sut.initialize(new Configuration(m));
 
@@ -96,16 +102,12 @@ class TeamsNotificationTest {
     assertEquals(TeamsNotificationConfig.PROXY + " is invalid as URI", ex.getMessage());
   }
 
-  private Map<String, Object> createValidCofnigMap() {
+  private Map<String, Object> createValidConfigMap() {
     Map<String, Object> m = new HashMap<>();
     m.put(TeamsNotificationConfig.WEBHOOK_URL, "https://testwebhook.com");
     m.put(TeamsNotificationConfig.COLOR, "000000");
     m.put(TeamsNotificationConfig.DETAIL_MESSAGE, "Detail");
     m.put(TeamsNotificationConfig.PROXY, "http://proxy.com:9999");
     return m;
-  }
-
-  private Configuration createValidConfig() {
-    return new Configuration(createValidCofnigMap());
   }
 }
