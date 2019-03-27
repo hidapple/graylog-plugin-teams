@@ -42,7 +42,12 @@ public class TeamsNotification implements AlarmCallback {
 
   @Override
   public void call(Stream stream, AlertCondition.CheckResult result) throws AlarmCallbackException {
-    TeamsClient client = new TeamsClient(configuration);
+    TeamsClient client;
+    try {
+      client = new TeamsClient(configuration);
+    } catch (TeamsClientException ex) {
+      throw new AlarmCallbackException("Failed to create Teams webhook client", ex);
+    }
     TeamsMessageCard req = new TeamsMessageCard(
         configuration.getString(TeamsNotificationConfig.COLOR),
         "Alert for Graylog stream: " + stream.getTitle(),
