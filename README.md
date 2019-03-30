@@ -29,11 +29,15 @@ to know detail and how to publish your Teams incoming webhook.
 Create Graylog notification of your stream and choose `Microsoft Teams Alarm Callback` as Notification type.
 
 #### 3. Configure Microsoft Teams Alarm Callback
-Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration.
+Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
 
 
 ![Teams notification configuraiton](img/configuration.png)
 
+#### 4. Receive notification
+You will receive notification message.
+
+![Teams notification message](img/message.png)
 
 Getting started
 ---------------

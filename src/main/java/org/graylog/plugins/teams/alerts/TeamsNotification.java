@@ -2,6 +2,13 @@ package org.graylog.plugins.teams.alerts;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.collect.Lists;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
@@ -20,10 +27,6 @@ import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
 
 /**
  * TeamsNotification is Graylog Notification(AlarmCallback) Plugin.
@@ -85,7 +88,7 @@ public class TeamsNotification implements AlarmCallback {
             "Stream title: ${stream.title}  \n" +
             "Stream description: ${stream.description}  \n" +
             "Alert Condition Title: ${alert_condition.title}  \n" +
-            "${if stream_url}Stream URL: ${stream_url}  ${end}\n" +
+            "${if stream_url}Stream URL: ${stream_url}${end}  \n" +
             "Triggered condition: ${check_result.triggeredCondition}  \n" +
             "${if backlog}" +
             "${foreach backlog message}" +
@@ -101,7 +104,7 @@ public class TeamsNotification implements AlarmCallback {
     configRequest.addField(new TextField(
         TeamsNotificationConfig.PROXY, "Proxy URL",
         "",
-        "Proxy URL",
+        "Proxy URL in the following format \"http(s)://${HOST}:${PORT}\".",
         Optional.OPTIONAL));
 
     return configRequest;

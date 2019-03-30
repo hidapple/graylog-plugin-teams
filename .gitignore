@@ -12,3 +12,5 @@ node
 build
 build.config.js.sample
 cache
+
+.DS_Store
