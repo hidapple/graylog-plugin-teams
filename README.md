@@ -2,9 +2,11 @@
 
 [![Build Status](https://travis-ci.org/https://github.com/hidapple/graylog-plugin-teams.git.svg?branch=master)](https://travis-ci.org/https://github.com/hidapple/graylog-plugin-teams.git)
 
-__Use this paragraph to enter a description of your plugin.__
 
-**Required Graylog version:** 2.0 and later
+A Graylog alarm callback plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software)
+MessageCard post.
+
+**Required Graylog version:** 2.4.0 and later
 
 Installation
 ------------
@@ -16,22 +18,26 @@ and can be configured in your `graylog.conf` file.
 
 Restart `graylog-server` and you are done.
 
-Development
------------
-
-You can improve your development experience for the web interface part of your plugin
-dramatically by making use of hot reloading. To do this, do the following:
-
-* `git clone https://github.com/Graylog2/graylog2-server.git`
-* `cd graylog2-server/graylog2-web-interface`
-* `ln -s $YOURPLUGIN plugin/`
-* `npm install && npm start`
-
 Usage
 -----
 
-__Use this paragraph to document the usage of your plugin__
+#### 1. Publish Teams incoming webhook
+First of all, you need to publish your Teams incoming webhook. See [Microsoft docs](https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/connectors/connectors-using)
+to know detail and how to publish your Teams incoming webhook.
 
+#### 2. Create Graylog notification
+Create Graylog notification of your stream and choose `Microsoft Teams Alarm Callback` as Notification type.
+
+#### 3. Configure Microsoft Teams Alarm Callback
+Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
+
+
+![Teams notification configuraiton](img/configuration.png)
+
+#### 4. Receive notification
+You will receive notification message.
+
+![Teams notification message](img/message.png)
 
 Getting started
 ---------------
@@ -56,3 +62,7 @@ $ mvn release:perform
 ```
 
 This sets the version numbers, creates a tag and pushes to GitHub. Travis CI will build the release artifacts and upload to GitHub automatically.
+
+License
+-------
+See [LISENCE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LISENCE)

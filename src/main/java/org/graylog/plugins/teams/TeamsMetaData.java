@@ -8,9 +8,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 
-/**
- * Implement the PluginMetaData interface here.
- */
 public class TeamsMetaData implements PluginMetaData {
     private static final String PLUGIN_PROPERTIES = "org.graylog.plugins.graylog-plugin-teams/graylog-plugin.properties";
 
@@ -41,8 +38,7 @@ public class TeamsMetaData implements PluginMetaData {
 
     @Override
     public String getDescription() {
-        // TODO Insert correct plugin description
-        return "Description of Teams plugin";
+        return "Microsoft Teams plugin";
     }
 
     @Override
