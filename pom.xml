@@ -4,21 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.graylog.plugins</groupId>
-        <artifactId>graylog-plugin-parent</artifactId>
-        <version>3.0.0</version>
-        <relativePath>../graylog2-server/graylog-plugin-parent</relativePath>
-    </parent>
-
     <groupId>org.graylog.plugins</groupId>
     <artifactId>graylog-plugin-teams</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
     <description>Graylog Teams plugin</description>
     <url>https://www.graylog.org</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -41,7 +42,7 @@
         <!-- Plugins will not be deployed by default - set to `false` if you actually want to deploy it -->
         <maven.deploy.skip>true</maven.deploy.skip>
 
-        <graylog.version>${project.parent.version}</graylog.version>
+        <graylog.version>2.4.6</graylog.version>
         <graylog.plugin-dir>/usr/share/graylog-server/plugin</graylog.plugin-dir>
     </properties>
 

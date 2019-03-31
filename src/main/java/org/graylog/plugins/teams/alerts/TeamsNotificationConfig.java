@@ -6,7 +6,7 @@ public class TeamsNotificationConfig {
 
   public static final String COLOR = "color";
 
-  public static final String DETAIL_MESSAGE = "custom_message";
+  public static final String DETAIL_MESSAGE = "detail_message";
 
   public static final String PROXY = "proxy";
 }
