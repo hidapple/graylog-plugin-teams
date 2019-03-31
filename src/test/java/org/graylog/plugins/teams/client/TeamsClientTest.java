@@ -1,14 +1,15 @@
 package org.graylog.plugins.teams.client;
 
-import static org.junit.Assert.assertEquals;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.HashMap;
 import java.util.Map;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import org.graylog.plugins.teams.alerts.TeamsNotificationConfig;
 import org.graylog2.plugin.configuration.Configuration;
 import org.junit.jupiter.api.AfterEach;
@@ -60,7 +61,7 @@ class TeamsClientTest {
 
   private Map<String, Object> createValidConfigMap() {
     Map<String, Object> m = new HashMap<>();
-    m.put(TeamsNotificationConfig.WEBHOOK_URL, "https://testwebhook.com");
+    m.put(TeamsNotificationConfig.WEBHOOK_URL, "http://localhost:8090");
     m.put(TeamsNotificationConfig.COLOR, "000000");
     m.put(TeamsNotificationConfig.DETAIL_MESSAGE, "Detail");
     return m;
@@ -71,28 +72,30 @@ class TeamsClientTest {
 
     private TeamsClient sut;
 
-    private MockWebServer server;
+    private WireMockServer server;
 
     @BeforeEach
     void setUp() {
-      server = new MockWebServer();
+      server = new WireMockServer(8090);
+      server.start();
     }
 
     @AfterEach
-    void tearDown() throws IOException {
-      server.shutdown();
+    void tearDown() {
+      server.stop();
     }
 
     @Test
-    void postMessageCard() throws IOException {
-      // Prepare mock server
-      server.enqueue(new MockResponse().setResponseCode(200));
-      server.start();
-
-      // Prepare Configuration
+    void postMessageCard() {
+      // Prepare config
       Map<String, Object> m = createValidConfigMap();
-      m.replace(TeamsNotificationConfig.WEBHOOK_URL, server.url("/").toString());
       sut = new TeamsClient(new Configuration(m));
+
+      // Prepare mock server
+      server.stubFor(
+          post(urlEqualTo("/"))
+              .willReturn(aResponse().withStatus(200))
+      );
 
       // Then
       try {
@@ -103,15 +106,16 @@ class TeamsClientTest {
     }
 
     @Test
-    void postMessageCard_Fail_UnexpectedRequestCode() throws IOException {
-      // Prepare mock server
-      server.enqueue(new MockResponse().setResponseCode(500));
-      server.start();
-
+    void postMessageCard_Fail_UnexpectedRequestCode() {
       // Prepare Configuration
       Map<String, Object> m = createValidConfigMap();
-      m.replace(TeamsNotificationConfig.WEBHOOK_URL, server.url("/").toString());
       sut = new TeamsClient(new Configuration(m));
+
+      // Prepare mock server
+      server.stubFor(
+          post(urlEqualTo("/"))
+              .willReturn(aResponse().withStatus(500))
+      );
 
       // Then
       TeamsClientException ex = assertThrows(TeamsClientException.class,
