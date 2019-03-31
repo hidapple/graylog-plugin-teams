@@ -6,7 +6,7 @@
 A Graylog alarm callback plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software)
 MessageCard post.
 
-**Required Graylog version:** 2.4.6 and later
+**Required Graylog version:** 2.4.0 and later
 
 Installation
 ------------

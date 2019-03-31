@@ -39,6 +39,16 @@ class TeamsClientTest {
   }
 
   @Test
+  void initTeamsClient_Fail_InvalidWebhook() {
+    Map<String, Object> m = new HashMap<>();
+    m.put(TeamsNotificationConfig.WEBHOOK_URL, "invalid webhook");
+    Configuration invalidConf = new Configuration(m);
+
+    TeamsClientException ex = assertThrows(TeamsClientException.class, () -> new TeamsClient(invalidConf));
+    assertEquals("Teams webhook URL is invalid format. URL=invalid webhook", ex.getMessage());
+  }
+
+  @Test
   void initTeamsClient_Fail_InvalidProxy() {
     Map<String, Object> m = createValidConfigMap();
     m.put(TeamsNotificationConfig.PROXY, "invalid proxy");
@@ -87,21 +97,9 @@ class TeamsClientTest {
       // Then
       try {
         sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail"));
-      } catch (TeamsClientException ex) {
-        fail("Exception should not be thrown");
+      } catch (Exception ex) {
+        fail("Exception should not be thrown.", ex);
       }
-    }
-
-    @Test
-    void postMessageCard_Fail_InvalidWebhookURL() {
-      Map<String, Object> m = createValidConfigMap();
-      m.replace(TeamsNotificationConfig.WEBHOOK_URL, "invalid webhook$$$");
-      sut = new TeamsClient(new Configuration(m));
-
-      // Then
-      TeamsClientException ex = assertThrows(TeamsClientException.class,
-          () -> sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail")));
-      assertEquals("Teams webhook URL is invalid format. URL=invalid webhook$$$", ex.getMessage());
     }
 
     @Test
