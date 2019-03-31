@@ -1,6 +1,6 @@
 # Teams Plugin for Graylog
 
-[![Build Status](https://travis-ci.org/https://github.com/hidapple/graylog-plugin-teams.git.svg?branch=master)](https://travis-ci.org/https://github.com/hidapple/graylog-plugin-teams.git)
+[![Build Status](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)
 
 
 A Graylog alarm callback plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software)
