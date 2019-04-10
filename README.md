@@ -65,4 +65,4 @@ This sets the version numbers, creates a tag and pushes to GitHub. Travis CI wil
 
 License
 -------
-See [LISENCE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LISENCE)
+See [LICENSE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
