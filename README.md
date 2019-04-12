@@ -11,7 +11,7 @@ MessageCard post.
 Installation
 ------------
 
-[Download the plugin](https://github.com/https://github.com/hidapple/graylog-plugin-teams.git/releases)
+[Download the plugin](https://github.com/hidapple/graylog-plugin-teams/releases)
 and place the `.jar` file in your Graylog plugin directory. The plugin directory
 is the `plugins/` folder relative from your `graylog-server` directory by default
 and can be configured in your `graylog.conf` file.
@@ -65,4 +65,4 @@ This sets the version numbers, creates a tag and pushes to GitHub. Travis CI wil
 
 License
 -------
-See [LISENCE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LISENCE)
+See [LICENSE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
