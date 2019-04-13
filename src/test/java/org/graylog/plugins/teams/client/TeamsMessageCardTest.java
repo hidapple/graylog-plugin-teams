@@ -62,7 +62,7 @@ class TeamsMessageCardTest {
         + "\"text\":\"Text\","
         + "\"potentialAction\":[{"
         + "\"@type\":\"OpenUri\","
-        + "\"name\":\"Open Graylog Alert\","
+        + "\"name\":\"Open Graylog\","
         + "\"targets\":[{"
         + "\"os\":\"default\","
         + "\"uri\":\"http://localhost:9000\""

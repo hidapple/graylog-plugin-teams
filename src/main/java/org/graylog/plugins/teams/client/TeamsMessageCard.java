@@ -40,7 +40,7 @@ public class TeamsMessageCard {
       target.put("os", "default");
       target.put("uri", url);
       this.potentialAction = Lists.newArrayList(
-          new PotentialAction("OpenUri", "Open Graylog Alert", Lists.newArrayList(target)));
+          new PotentialAction("OpenUri", "Open Graylog", Lists.newArrayList(target)));
     }
   }
 

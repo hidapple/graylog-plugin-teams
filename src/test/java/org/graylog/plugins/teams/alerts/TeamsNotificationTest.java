@@ -101,9 +101,20 @@ class TeamsNotificationTest {
     assertEquals(TeamsNotificationConfig.PROXY + " is invalid as URI", ex.getMessage());
   }
 
+  @Test
+  void checkConfiguration_Fail_GraylogURLIsInvalid() throws AlarmCallbackConfigurationException {
+    Map<String, Object> m = createValidConfigMap();
+    m.replace(TeamsNotificationConfig.GRAYLOG_URL, "invalid URL");
+    sut.initialize(new Configuration(m));
+
+    ConfigurationException ex = assertThrows(ConfigurationException.class, () -> sut.checkConfiguration());
+    assertEquals(TeamsNotificationConfig.GRAYLOG_URL + " is invalid as URI", ex.getMessage());
+  }
+
   private Map<String, Object> createValidConfigMap() {
     Map<String, Object> m = new HashMap<>();
     m.put(TeamsNotificationConfig.WEBHOOK_URL, "https://testwebhook.com");
+    m.put(TeamsNotificationConfig.GRAYLOG_URL, "https://my-graylog.com");
     m.put(TeamsNotificationConfig.COLOR, "000000");
     m.put(TeamsNotificationConfig.DETAIL_MESSAGE, "Detail");
     m.put(TeamsNotificationConfig.PROXY, "http://proxy.com:9999");

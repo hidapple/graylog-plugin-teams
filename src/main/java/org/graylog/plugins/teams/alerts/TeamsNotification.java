@@ -132,6 +132,7 @@ public class TeamsNotification implements AlarmCallback {
     }
     validateURI(configuration, TeamsNotificationConfig.WEBHOOK_URL);
     validateURI(configuration, TeamsNotificationConfig.PROXY);
+    validateURI(configuration, TeamsNotificationConfig.GRAYLOG_URL);
 
     // Not error but warning
     if (configuration.stringIsSet(TeamsNotificationConfig.COLOR)) {
