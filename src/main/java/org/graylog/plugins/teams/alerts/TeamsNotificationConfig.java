@@ -4,6 +4,8 @@ public class TeamsNotificationConfig {
 
   public static final String WEBHOOK_URL = "webhook_url";
 
+  public static final String GRAYLOG_URL = "graylog_url";
+
   public static final String COLOR = "color";
 
   public static final String DETAIL_MESSAGE = "detail_message";

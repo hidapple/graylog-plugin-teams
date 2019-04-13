@@ -8,11 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.*;
 
 /**
  * MessageCard is representing Outlook Actionable Message Card request.
@@ -26,8 +24,9 @@ public class TeamsMessageCard {
   private String title;
   private String text;
   private List<Section> sections;
+  private List<PotentialAction> potentialAction;
 
-  public TeamsMessageCard(String color, String title, String text, String detailMsg) {
+  public TeamsMessageCard(String color, String title, String text, String detailMsg, String url) {
     this.type = "MessageCard";
     this.context = "https://schema.org/extensions";
     this.themeColor = color;
@@ -35,6 +34,13 @@ public class TeamsMessageCard {
     this.text = text;
     if (!StringUtils.isEmpty(detailMsg)) {
       this.sections = Lists.newArrayList(new Section("Detail Message:", detailMsg));
+    }
+    if (!StringUtils.isEmpty(url)) {
+      Map<String, String> target = new HashMap<>();
+      target.put("os", "default");
+      target.put("uri", url);
+      this.potentialAction = Lists.newArrayList(
+          new PotentialAction("OpenUri", "Open Graylog Alert", Lists.newArrayList(target)));
     }
   }
 
@@ -45,8 +51,11 @@ public class TeamsMessageCard {
     params.put("themeColor", themeColor);
     params.put("title", title);
     params.put("text", text);
-    if (Objects.nonNull(this.sections)) {
+    if (Objects.nonNull(sections)) {
       params.put("sections", sections);
+    }
+    if (Objects.nonNull(potentialAction)) {
+      params.put("potentialAction", potentialAction);
     }
 
     try {
@@ -70,4 +79,23 @@ public class TeamsMessageCard {
       this.text = text;
     }
   }
+
+  @JsonInclude(Include.NON_NULL)
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class PotentialAction {
+    @JsonProperty("@type")
+    String type;
+    @JsonProperty("name")
+    String name;
+    @JsonProperty("targets")
+    List<Map<String, String>> targets;
+
+    @JsonCreator
+    PotentialAction(String type, String name, List<Map<String, String>> targets) {
+      this.type = type;
+      this.name = name;
+      this.targets = targets;
+    }
+  }
+
 }
