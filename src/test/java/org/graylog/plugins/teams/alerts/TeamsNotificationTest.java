@@ -92,6 +92,16 @@ class TeamsNotificationTest {
   }
 
   @Test
+  void checkConfiguration_Fail_WebhookURLIsUnsupportedProtocol() throws AlarmCallbackConfigurationException {
+    Map<String, Object> m = createValidConfigMap();
+    m.replace(TeamsNotificationConfig.WEBHOOK_URL, "ftp://localhost");
+    sut.initialize(new Configuration(m));
+
+    ConfigurationException ex = assertThrows(ConfigurationException.class, () -> sut.checkConfiguration());
+    assertEquals(TeamsNotificationConfig.WEBHOOK_URL + " supports only http(s)", ex.getMessage());
+  }
+
+  @Test
   void checkConfiguration_Fail_ProxyURLIsInvalid() throws AlarmCallbackConfigurationException {
     Map<String, Object> m = createValidConfigMap();
     m.replace(TeamsNotificationConfig.PROXY, "invalid URL");
@@ -102,6 +112,16 @@ class TeamsNotificationTest {
   }
 
   @Test
+  void checkConfiguration_Fail_ProxyURLIsUnsupportedProtocol() throws AlarmCallbackConfigurationException {
+    Map<String, Object> m = createValidConfigMap();
+    m.replace(TeamsNotificationConfig.PROXY, "ftp://localhost");
+    sut.initialize(new Configuration(m));
+
+    ConfigurationException ex = assertThrows(ConfigurationException.class, () -> sut.checkConfiguration());
+    assertEquals(TeamsNotificationConfig.PROXY + " supports only http(s)", ex.getMessage());
+  }
+
+  @Test
   void checkConfiguration_Fail_GraylogURLIsInvalid() throws AlarmCallbackConfigurationException {
     Map<String, Object> m = createValidConfigMap();
     m.replace(TeamsNotificationConfig.GRAYLOG_URL, "invalid URL");
@@ -109,6 +129,16 @@ class TeamsNotificationTest {
 
     ConfigurationException ex = assertThrows(ConfigurationException.class, () -> sut.checkConfiguration());
     assertEquals(TeamsNotificationConfig.GRAYLOG_URL + " is invalid as URI", ex.getMessage());
+  }
+
+  @Test
+  void checkConfiguration_Fail_GraylogURLIsUnsupportedProtocol() throws AlarmCallbackConfigurationException {
+    Map<String, Object> m = createValidConfigMap();
+    m.replace(TeamsNotificationConfig.GRAYLOG_URL, "ftp://localhost");
+    sut.initialize(new Configuration(m));
+
+    ConfigurationException ex = assertThrows(ConfigurationException.class, () -> sut.checkConfiguration());
+    assertEquals(TeamsNotificationConfig.GRAYLOG_URL + " supports only http(s)", ex.getMessage());
   }
 
   private Map<String, Object> createValidConfigMap() {

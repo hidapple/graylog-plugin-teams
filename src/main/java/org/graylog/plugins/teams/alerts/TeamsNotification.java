@@ -181,10 +181,15 @@ public class TeamsNotification implements AlarmCallback {
 
   private void validateURI(Configuration config,  String field) throws ConfigurationException {
     if (!config.stringIsSet(field)) return;
+
+    String uri = config.getString(field);
     try {
-      new URI(Objects.requireNonNull(config.getString(field)));
+      new URI(Objects.requireNonNull(uri));
     } catch (URISyntaxException ex) {
       throw new ConfigurationException(field + " is invalid as URI");
+    }
+    if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
+      throw new ConfigurationException(field + " supports only http(s)");
     }
   }
 }
