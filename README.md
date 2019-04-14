@@ -31,16 +31,15 @@ Create Graylog notification of your stream and choose `Microsoft Teams Alarm Cal
 #### 3. Configure Microsoft Teams Alarm Callback
 Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
 
-
 ![Teams notification configuraiton](img/configuration.png)
 
 #### 4. Receive notification
-You will receive notification message.
+You will receive notification message like below.
 
 ![Teams notification message](img/message.png)
 
-Getting started
----------------
+Getting development started
+---------------------------
 
 This project is using Maven 3 and requires Java 8 or higher.
 
