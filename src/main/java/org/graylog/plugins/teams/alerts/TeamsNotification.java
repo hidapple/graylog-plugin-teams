@@ -2,13 +2,6 @@ package org.graylog.plugins.teams.alerts;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.collect.Lists;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
@@ -27,6 +20,14 @@ import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * TeamsNotification is Graylog Notification(AlarmCallback) Plugin.
@@ -55,8 +56,10 @@ public class TeamsNotification implements AlarmCallback {
         configuration.getString(TeamsNotificationConfig.COLOR),
         "Alert for Graylog stream: " + stream.getTitle(),
         result.getResultDescription(),
-        buildDetailMsg(stream, result, configuration.getString(TeamsNotificationConfig.DETAIL_MESSAGE))
+        buildDetailMsg(stream, result, configuration.getString(TeamsNotificationConfig.DETAIL_MESSAGE)),
+        configuration.getString(TeamsNotificationConfig.GRAYLOG_URL)
     );
+    System.out.println(req.toJsonString());
     try {
       client.postMessageCard(req);
     } catch(TeamsClientException ex) {
@@ -73,6 +76,12 @@ public class TeamsNotification implements AlarmCallback {
         "",
         "Microsoft Teams Incoming Webhook URL",
         Optional.NOT_OPTIONAL));
+
+    configRequest.addField(new TextField(
+        TeamsNotificationConfig.GRAYLOG_URL, "Graylog URL",
+        "",
+        "URL to be attached in notification",
+        Optional.OPTIONAL));
 
     configRequest.addField(new TextField(
         TeamsNotificationConfig.COLOR, "Color",
@@ -97,7 +106,7 @@ public class TeamsNotification implements AlarmCallback {
             "${else}" +
             "<No backlog>\n" +
             "${end}",
-        "Detail message. Basic Markdown syntax is acceptable.",
+        "Detail message supporting basic Markdown syntax",
         Optional.OPTIONAL,
         Attribute.TEXTAREA));
 
@@ -127,6 +136,7 @@ public class TeamsNotification implements AlarmCallback {
     }
     validateURI(configuration, TeamsNotificationConfig.WEBHOOK_URL);
     validateURI(configuration, TeamsNotificationConfig.PROXY);
+    validateURI(configuration, TeamsNotificationConfig.GRAYLOG_URL);
 
     // Not error but warning
     if (configuration.stringIsSet(TeamsNotificationConfig.COLOR)) {
@@ -175,10 +185,15 @@ public class TeamsNotification implements AlarmCallback {
 
   private void validateURI(Configuration config,  String field) throws ConfigurationException {
     if (!config.stringIsSet(field)) return;
+
+    String uri = config.getString(field);
     try {
-      new URI(Objects.requireNonNull(config.getString(field)));
+      new URI(Objects.requireNonNull(uri));
     } catch (URISyntaxException ex) {
       throw new ConfigurationException(field + " is invalid as URI");
+    }
+    if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
+      throw new ConfigurationException(field + " supports only http(s)");
     }
   }
 }

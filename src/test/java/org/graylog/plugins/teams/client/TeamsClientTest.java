@@ -1,21 +1,22 @@
 package org.graylog.plugins.teams.client;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import com.github.tomakehurst.wiremock.WireMockServer;
-import java.util.HashMap;
-import java.util.Map;
 import org.graylog.plugins.teams.alerts.TeamsNotificationConfig;
 import org.graylog2.plugin.configuration.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class TeamsClientTest {
 
@@ -99,7 +100,7 @@ class TeamsClientTest {
 
       // Then
       try {
-        sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail"));
+        sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail", ""));
       } catch (Exception ex) {
         fail("Exception should not be thrown.", ex);
       }
@@ -119,7 +120,7 @@ class TeamsClientTest {
 
       // Then
       TeamsClientException ex = assertThrows(TeamsClientException.class,
-          () -> sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail")));
+          () -> sut.postMessageCard(new TeamsMessageCard("FFFFFF", "Title", "Text", "Detail", "")));
       assertEquals("Teams webhook returned unexpected response status. HTTP Status=500", ex.getMessage());
     }
   }

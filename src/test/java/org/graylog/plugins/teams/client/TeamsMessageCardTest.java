@@ -1,18 +1,37 @@
 package org.graylog.plugins.teams.client;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TeamsMessageCardTest {
 
   @Test
+  void toJsonString_WithoutDetailMsgAndGraylogURL() throws IOException {
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, StringUtils.EMPTY);
+    String expected = "{"
+        + "\"@type\":\"MessageCard\","
+        + "\"@context\":\"https://schema.org/extensions\","
+        + "\"themeColor\":\"0076D7\","
+        + "\"title\":\"Title\","
+        + "\"text\":\"Text\""
+        + "}";
+
+    // When
+    String actual = sut.toJsonString();
+
+    // Then
+    assertJSON(expected, actual);
+  }
+
+  @Test
   void toJsonString_WithDetailMsg() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", "Detail Message Text");
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", "Detail Message Text", "");
     String expected = "{"
         + "\"@type\":\"MessageCard\","
         + "\"@context\":\"https://schema.org/extensions\","
@@ -33,14 +52,22 @@ class TeamsMessageCardTest {
   }
 
   @Test
-  void toJsonString_WithoutDetailMsg() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY);
+  void toJsonString_WithGraylogURL() throws IOException {
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, "http://localhost:9000");
     String expected = "{"
         + "\"@type\":\"MessageCard\","
         + "\"@context\":\"https://schema.org/extensions\","
         + "\"themeColor\":\"0076D7\","
         + "\"title\":\"Title\","
-        + "\"text\":\"Text\""
+        + "\"text\":\"Text\","
+        + "\"potentialAction\":[{"
+        + "\"@type\":\"OpenUri\","
+        + "\"name\":\"Open Graylog\","
+        + "\"targets\":[{"
+        + "\"os\":\"default\","
+        + "\"uri\":\"http://localhost:9000\""
+        + "}]"
+        + "}]"
         + "}";
 
     // When
