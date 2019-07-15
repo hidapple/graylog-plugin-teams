@@ -2,11 +2,14 @@ package org.graylog.plugins.teams.alerts;
 
 import com.floreysoft.jmte.Engine;
 import com.google.common.collect.Lists;
+import java.text.MessageFormat;
+import org.apache.commons.lang.StringUtils;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog.plugins.teams.client.TeamsMessageCard;
 import org.graylog2.plugin.Message;
 import org.graylog2.plugin.MessageSummary;
+import org.graylog2.plugin.Tools;
 import org.graylog2.plugin.alarms.AlertCondition;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallback;
 import org.graylog2.plugin.alarms.callbacks.AlarmCallbackConfigurationException;
@@ -18,6 +21,7 @@ import org.graylog2.plugin.configuration.fields.ConfigurationField.Optional;
 import org.graylog2.plugin.configuration.fields.TextField;
 import org.graylog2.plugin.configuration.fields.TextField.Attribute;
 import org.graylog2.plugin.streams.Stream;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,7 +184,30 @@ public class TeamsNotification implements AlarmCallback {
     model.put("alert_condition", result.getTriggeredCondition());
     model.put("backlog", backlog);
     model.put("backlog_size", backlog.size());
+
+    String graylogURL = configuration.getString(TeamsNotificationConfig.GRAYLOG_URL);
+    if (!StringUtils.isEmpty(graylogURL)) {
+      model.put("stream_url", buildStreamURL(graylogURL, result, stream));
+    }
     return model;
+  }
+
+  private String buildStreamURL(String graylogURL, AlertCondition.CheckResult result , Stream stream) {
+    if (graylogURL.endsWith("/")) {
+      graylogURL = graylogURL.substring(0, graylogURL.length() - 1);
+    }
+    int timeRange = 5; // default time range (minutes)
+    if (Objects.nonNull(result.getTriggeredCondition().getParameters().get("time"))) {
+      timeRange = (int) result.getTriggeredCondition().getParameters().get("time");
+    }
+    DateTime alertTriggeredAt = result.getTriggeredAt();
+    DateTime alertScanStartAt = alertTriggeredAt.minusMinutes(timeRange);
+    String streamURL = MessageFormat.format("{0}/streams/{1}/search?q=%2A&rangetype=absolute&from={2}&to={3}",
+        graylogURL,
+        stream.getId(),
+        Tools.getISO8601String(alertScanStartAt),
+        Tools.getISO8601String(alertTriggeredAt));
+    return MessageFormat.format("[{0}]({1})", streamURL, streamURL);
   }
 
   private void validateURI(Configuration config,  String field) throws ConfigurationException {
