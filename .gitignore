@@ -13,4 +13,6 @@ build
 build.config.js.sample
 cache
 
+src/main/generated
+
 .DS_Store
