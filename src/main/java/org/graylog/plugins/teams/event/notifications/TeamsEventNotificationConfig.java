@@ -22,11 +22,30 @@ import javax.validation.constraints.NotBlank;
 public abstract class TeamsEventNotificationConfig implements EventNotificationConfig {
   public static final String TYPE_NAME = "teams-notification-v2";
 
+  // Plugin input fields
   private static final String FIELD_WEBHOOK_URL = "webhook_url";
   private static final String FIELD_GRAYLOG_URL = "graalog_url";
   private static final String FIELD_COLOR = "color";
   private static final String FIELD_MESSAGE = "message";
   private static final String FIELD_PROXY_URL = "proxy_url";
+
+  // Default values
+  private static final String DEFAULT_COLOR = "0076D7";
+  private static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
+            "Date: ${check_result.triggeredAt}\n" +
+            "Stream ID: ${stream.id}\n" +
+            "Stream title: ${stream.title}\n" +
+            "Stream description: ${stream.description}\n" +
+            "Alert Condition Title: ${alert_condition.title}\n" +
+            "${if stream_url}Stream URL: ${stream_url}${end}\n" +
+            "Triggered condition: ${check_result.triggeredCondition}\n" +
+            "${if backlog}" +
+            "${foreach backlog message}" +
+            "${message}\n\n" +
+            "${end}" +
+            "${else}" +
+            "<No backlog>\n" +
+            "${end}";
 
   @JsonProperty(FIELD_WEBHOOK_URL)
   @NotBlank
@@ -57,6 +76,10 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   @JsonIgnore
   public ValidationResult validate() {
     final ValidationResult validation = new ValidationResult();
+
+    if (webhookURL().isEmpty()) {
+      validation.addError(FIELD_WEBHOOK_URL, "Webhook URL cannot be empty.");
+    }
     return validation;
   }
 
@@ -68,8 +91,8 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
           .type(TYPE_NAME)
           .webhookURL("")
           .graylogURL("")
-          .color("")
-          .message("")
+          .color(DEFAULT_COLOR)
+          .message(DEFAULT_MESSAGE)
           .proxyURL("");
     }
 
