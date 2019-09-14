@@ -31,7 +31,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
-  private static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
+  static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
             "Date: ${check_result.triggeredAt}\n" +
             "Stream ID: ${stream.id}\n" +
             "Stream title: ${stream.title}\n" +

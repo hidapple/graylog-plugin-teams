@@ -1,13 +1,11 @@
 package org.graylog.plugins.teams;
 
-import org.graylog.events.notifications.EventNotification;
-import org.graylog.events.notifications.EventNotificationConfig;
-import org.graylog.plugins.teams.alerts.TeamsNotification;
-import org.graylog2.plugin.PluginConfigBean;
-import org.graylog2.plugin.PluginModule;
-
 import java.util.Collections;
 import java.util.Set;
+import org.graylog.plugins.teams.event.notifications.TeamsEventNotification;
+import org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig;
+import org.graylog2.plugin.PluginConfigBean;
+import org.graylog2.plugin.PluginModule;
 
 public class TeamsModule extends PluginModule {
 
@@ -20,7 +18,9 @@ public class TeamsModule extends PluginModule {
 
   @Override
   protected void configure() {
-    addAlarmCallback(TeamsNotification.class);
-    addNotificationType(TYPE_NAME, EventNotificationConfig.class, EventNotification.class, EventNotification.Factory.class);
+    addNotificationType(TYPE_NAME,
+                        TeamsEventNotificationConfig.class,
+                        TeamsEventNotification.class,
+                        TeamsEventNotification.Factory.class);
   }
 }
