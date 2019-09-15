@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
+import javax.validation.constraints.NotBlank;
 import org.graylog.events.contentpack.entities.EventNotificationConfigEntity;
 import org.graylog.events.event.EventDto;
 import org.graylog.events.notifications.EventNotificationConfig;
@@ -14,38 +15,37 @@ import org.graylog.scheduler.JobTriggerData;
 import org.graylog2.contentpacks.EntityDescriptorIds;
 import org.graylog2.plugin.rest.ValidationResult;
 
-import javax.validation.constraints.NotBlank;
-
 @AutoValue
 @JsonTypeName(TeamsEventNotificationConfig.TYPE_NAME)
 @JsonDeserialize(builder = TeamsEventNotificationConfig.Builder.class)
 public abstract class TeamsEventNotificationConfig implements EventNotificationConfig {
+
   public static final String TYPE_NAME = "teams-notification-v2";
 
   // Plugin input fields
   private static final String FIELD_WEBHOOK_URL = "webhook_url";
-  private static final String FIELD_GRAYLOG_URL = "graalog_url";
+  private static final String FIELD_GRAYLOG_URL = "graylog_url";
   private static final String FIELD_COLOR = "color";
   private static final String FIELD_MESSAGE = "message";
   private static final String FIELD_PROXY_URL = "proxy_url";
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
-  static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
-            "Date: ${check_result.triggeredAt}\n" +
-            "Stream ID: ${stream.id}\n" +
-            "Stream title: ${stream.title}\n" +
-            "Stream description: ${stream.description}\n" +
-            "Alert Condition Title: ${alert_condition.title}\n" +
-            "${if stream_url}Stream URL: ${stream_url}${end}\n" +
-            "Triggered condition: ${check_result.triggeredCondition}\n" +
-            "${if backlog}" +
-            "${foreach backlog message}" +
-            "${message}\n\n" +
-            "${end}" +
-            "${else}" +
-            "<No backlog>\n" +
-            "${end}";
+  public static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
+      "Date: ${check_result.triggeredAt}\n" +
+      "Stream ID: ${stream.id}\n" +
+      "Stream title: ${stream.title}\n" +
+      "Stream description: ${stream.description}\n" +
+      "Alert Condition Title: ${alert_condition.title}\n" +
+      "${if stream_url}Stream URL: ${stream_url}${end}\n" +
+      "Triggered condition: ${check_result.triggeredCondition}\n" +
+      "${if backlog}" +
+      "${foreach backlog message}" +
+      "${message}\n\n" +
+      "${end}" +
+      "${else}" +
+      "<No backlog>\n" +
+      "${end}";
 
   @JsonProperty(FIELD_WEBHOOK_URL)
   @NotBlank
@@ -68,7 +68,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   }
 
   @JsonIgnore
-  public JobTriggerData toJobTriggerData(EventDto dto) {
+  public JobTriggerData toJobTriggerData(final EventDto dto) {
     return EventNotificationExecutionJob.Data.builder().eventDto(dto).build();
   }
 
@@ -85,6 +85,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
   @AutoValue.Builder
   public static abstract class Builder implements EventNotificationConfig.Builder<Builder> {
+
     @JsonCreator
     public static Builder create() {
       return new AutoValue_TeamsEventNotificationConfig.Builder()
@@ -116,7 +117,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
   // TODO
   @Override
-  public EventNotificationConfigEntity toContentPackEntity(EntityDescriptorIds entityDescriptorIds) {
+  public EventNotificationConfigEntity toContentPackEntity(final EntityDescriptorIds entityDescriptorIds) {
     return null;
   }
 }

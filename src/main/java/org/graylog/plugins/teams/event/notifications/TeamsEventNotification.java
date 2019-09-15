@@ -12,10 +12,13 @@ import org.graylog.events.notifications.EventNotificationModelData;
 import org.graylog.events.notifications.EventNotificationService;
 import org.graylog.events.notifications.PermanentEventNotificationException;
 import org.graylog.events.processor.EventDefinitionDto;
+import org.graylog.plugins.teams.client.TeamsClient;
+import org.graylog.plugins.teams.client.TeamsClientException;
 import org.graylog2.jackson.TypeReferences;
 import org.graylog2.plugin.MessageSummary;
 
 public class TeamsEventNotification implements EventNotification {
+
   public interface Factory extends EventNotification.Factory {
     @Override
     TeamsEventNotification create();
@@ -29,8 +32,8 @@ public class TeamsEventNotification implements EventNotification {
 
   @Inject
   public TeamsEventNotification(final EventNotificationService notificationCallbackService,
-      final TeamsClient client,
-      final ObjectMapper objMapper) {
+                                final TeamsClient client,
+                                final ObjectMapper objMapper) {
     this.notificationCallbackService = notificationCallbackService;
     this.teamsClient = client;
     this.objMapper = objMapper;

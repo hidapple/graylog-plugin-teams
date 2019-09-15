@@ -1,4 +1,4 @@
-package org.graylog.plugins.teams.event.notifications;
+package org.graylog.plugins.teams.client;
 
 public class TeamsClientException extends RuntimeException {
 

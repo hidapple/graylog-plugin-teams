@@ -1,5 +1,7 @@
 package org.graylog.plugins.teams;
 
+import static org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig.TYPE_NAME;
+
 import java.util.Collections;
 import java.util.Set;
 import org.graylog.plugins.teams.event.notifications.TeamsEventNotification;
@@ -8,8 +10,6 @@ import org.graylog2.plugin.PluginConfigBean;
 import org.graylog2.plugin.PluginModule;
 
 public class TeamsModule extends PluginModule {
-
-  private static final String TYPE_NAME = "teams-notification-v2.0.0";
 
   @Override
   public Set<? extends PluginConfigBean> getConfigBeans() {
