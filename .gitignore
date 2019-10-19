@@ -16,3 +16,4 @@ cache
 src/main/generated
 
 .DS_Store
+yarn-error.log
