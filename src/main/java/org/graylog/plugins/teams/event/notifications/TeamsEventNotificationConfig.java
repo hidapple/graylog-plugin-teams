@@ -23,11 +23,11 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   public static final String TYPE_NAME = "teams-notification-v2";
 
   // Plugin input fields
-  private static final String FIELD_WEBHOOK_URL = "webhook_url";
-  private static final String FIELD_GRAYLOG_URL = "graylog_url";
-  private static final String FIELD_COLOR = "color";
-  private static final String FIELD_MESSAGE = "message";
-  private static final String FIELD_PROXY_URL = "proxy_url";
+  public static final String FIELD_WEBHOOK_URL = "webhook_url";
+  public static final String FIELD_GRAYLOG_URL = "graylog_url";
+  public static final String FIELD_COLOR = "color";
+  public static final String FIELD_MESSAGE = "message";
+  public static final String FIELD_PROXY_URL = "proxy_url";
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
@@ -67,6 +67,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
     return Builder.create();
   }
 
+  @Override
   @JsonIgnore
   public JobTriggerData toJobTriggerData(final EventDto dto) {
     return EventNotificationExecutionJob.Data.builder().eventDto(dto).build();
@@ -118,6 +119,6 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   // TODO
   @Override
   public EventNotificationConfigEntity toContentPackEntity(final EntityDescriptorIds entityDescriptorIds) {
-    return null;
+    return TeamsEventNotificationConfigEntity.builder().build();
   }
 }

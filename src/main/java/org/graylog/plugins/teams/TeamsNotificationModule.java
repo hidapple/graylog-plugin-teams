@@ -9,7 +9,7 @@ import org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfi
 import org.graylog2.plugin.PluginConfigBean;
 import org.graylog2.plugin.PluginModule;
 
-public class TeamsModule extends PluginModule {
+public class TeamsNotificationModule extends PluginModule {
 
   @Override
   public Set<? extends PluginConfigBean> getConfigBeans() {
