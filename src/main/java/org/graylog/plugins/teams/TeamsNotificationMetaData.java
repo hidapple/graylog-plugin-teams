@@ -12,12 +12,12 @@ public class TeamsNotificationMetaData implements PluginMetaData {
 
     @Override
     public String getUniqueId() {
-        return "org.graylog.plugins.teams.TeamsPlugin";
+        return "org.graylog.plugins.teams.TeamsNotificationPlugin";
     }
 
     @Override
     public String getName() {
-        return "Teams";
+        return "Teams Notification";
     }
 
     @Override

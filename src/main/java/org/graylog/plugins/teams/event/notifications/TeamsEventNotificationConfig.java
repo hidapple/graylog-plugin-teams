@@ -67,7 +67,6 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
     return Builder.create();
   }
 
-  @Override
   @JsonIgnore
   public JobTriggerData toJobTriggerData(final EventDto dto) {
     return EventNotificationExecutionJob.Data.builder().eventDto(dto).build();

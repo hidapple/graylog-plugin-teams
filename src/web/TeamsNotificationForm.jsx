@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ControlLabel, FormGroup, HelpBlock } from 'react-bootstrap';
 import lodash from 'lodash';
 
 import { Input } from 'components/bootstrap';
