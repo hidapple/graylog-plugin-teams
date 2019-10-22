@@ -6,13 +6,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import org.apache.commons.lang3.StringUtils;
 import org.graylog.events.contentpack.entities.EventNotificationConfigEntity;
 import org.graylog.events.event.EventDto;
 import org.graylog.events.notifications.EventNotificationConfig;
 import org.graylog.events.notifications.EventNotificationExecutionJob;
 import org.graylog.scheduler.JobTriggerData;
 import org.graylog2.contentpacks.EntityDescriptorIds;
+import org.graylog2.contentpacks.model.entities.references.ValueReference;
 import org.graylog2.plugin.rest.ValidationResult;
 
 @AutoValue
@@ -72,13 +77,21 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
     return EventNotificationExecutionJob.Data.builder().eventDto(dto).build();
   }
 
-  // TODO
   @JsonIgnore
   public ValidationResult validate() {
     final ValidationResult validation = new ValidationResult();
 
     if (webhookURL().isEmpty()) {
-      validation.addError(FIELD_WEBHOOK_URL, "Webhook URL cannot be empty.");
+      validation.addError(FIELD_WEBHOOK_URL, FIELD_WEBHOOK_URL + " cannot be empty.");
+    }
+    if (!validURL(webhookURL())) {
+      validation.addError(FIELD_WEBHOOK_URL, FIELD_WEBHOOK_URL + " is invalid format.");
+    }
+    if (!validURL(graylogURL())) {
+      validation.addError(FIELD_GRAYLOG_URL, FIELD_GRAYLOG_URL + " is invalid format.");
+    }
+    if (!validURL(proxyURL())) {
+      validation.addError(FIELD_PROXY_URL, FIELD_PROXY_URL + " is invalid format.");
     }
     return validation;
   }
@@ -115,9 +128,26 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
     public abstract TeamsEventNotificationConfig build();
   }
 
-  // TODO
   @Override
   public EventNotificationConfigEntity toContentPackEntity(final EntityDescriptorIds entityDescriptorIds) {
-    return TeamsEventNotificationConfigEntity.builder().build();
+    return TeamsEventNotificationConfigEntity.builder()
+        .webhookURL(ValueReference.of(webhookURL()))
+        .graylogURL(ValueReference.of(graylogURL()))
+        .color(ValueReference.of(color()))
+        .message(ValueReference.of(message()))
+        .proxyURL(ValueReference.of(proxyURL()))
+        .build();
+  }
+
+  private boolean validURL(String uri) {
+    if (StringUtils.isEmpty(uri)) {
+      return true;
+    }
+    try {
+      new URI(Objects.requireNonNull(uri));
+    } catch (URISyntaxException ex) {
+      return false;
+    }
+    return true;
   }
 }

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import CommonNotificationSummary from './CommonNotificationSummary';
 
-// import styles from './TeamsNotificationSummary.css';
-
 class TeamsNotificationSummary extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
