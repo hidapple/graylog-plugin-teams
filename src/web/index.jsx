@@ -7,7 +7,7 @@ PluginStore.register(new PluginManifest({}, {
   eventNotificationTypes: [
     {
       type: 'teams-notification-v2',
-      displayName: 'Teams Notification',
+      displayName: 'Microsoft Teams Notification',
       formComponent: TeamsNotificationForm,
       summaryComponent: TeamsNotificationSummary,
       defaultConfig: TeamsNotificationForm.defaultConfig

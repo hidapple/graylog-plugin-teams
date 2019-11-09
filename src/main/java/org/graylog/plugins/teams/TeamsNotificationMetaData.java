@@ -17,7 +17,7 @@ public class TeamsNotificationMetaData implements PluginMetaData {
 
     @Override
     public String getName() {
-        return "Teams Notification";
+        return "Microsoft Teams Notification";
     }
 
     @Override
