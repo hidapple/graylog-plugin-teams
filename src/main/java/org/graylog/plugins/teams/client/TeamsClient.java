@@ -53,12 +53,12 @@ public class TeamsClient {
     LOG.debug("Request: " + req.toString());
 
     // Response
-    try (Response res = client.newCall(req).execute()) {
+    try (final Response res = client.newCall(req).execute()) {
       if (!res.isSuccessful()) {
         LOG.debug(res.toString());
         throw new TeamsClientException("Teams webhook returned unexpected response status. HTTP Status=" + res.code());
       }
-    } catch (IOException ex) {
+    } catch (final IOException ex) {
       throw new TeamsClientException("Failed to send POST request to the Teams webhook.", ex);
     }
   }
@@ -66,8 +66,8 @@ public class TeamsClient {
   private TeamsMessageCard createRequest(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
     return new TeamsMessageCard(
         config.color(),
-        "Title",
-        "Alert for Graylog stream",
+        "Graylog Event Notification is triggered",
+        "Event: " + model.get("event_definition_title"),
         buildMessage(config, model),
         config.graylogURL()
     );
