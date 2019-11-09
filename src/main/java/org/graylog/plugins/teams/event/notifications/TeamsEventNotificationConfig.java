@@ -36,34 +36,36 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
-  public static final String DEFAULT_MESSAGE = "--- [Event Definition] ---------------------------\n" +
-      "ID:          ${event_definition_id\n" +
-      "Type:        ${event_definition_type}\n" +
-      "Title:       ${event_definition_title}\n" +
-      "Description: ${event_definition_description}\n" +
-      "--- [Event] --------------------------------------\n" +
-      "Event:                ${event}\n" +
-      "--- [Event Detail] -------------------------------\n" +
-      "Timestamp:            ${event.timestamp}\n" +
-      "Message:              ${event.message}\n" +
-      "Source:               ${event.source}\n" +
-      "Key:                  ${event.key}\n" +
-      "Priority:             ${event.priority}\n" +
-      "Alert:                ${event.alert}\n" +
-      "Timestamp Processing: ${event.timestamp}\n" +
-      "Timerange Start:      ${event.timerange_start}\n" +
-      "Timerange End:        ${event.timerange_end}\n" +
-      "Fields:\n" +
-      "${foreach event.fields field}  ${field.key}: ${field.value}\n" +
+  public static final String DEFAULT_MESSAGE = "# --- [Event Definition] ---------------------------\n" +
+      "**ID:**          ${event_definition_id}  \n" +
+      "**Type:**        ${event_definition_type}  \n" +
+      "**Title:**       ${event_definition_title}  \n" +
+      "**Description:** ${event_definition_description}  \n" +
+      "****# --- [Event] --------------------------------------  \n" +
+      "**Event:**                ${event}\n  " +
+      "****# --- [Event Detail] -------------------------------  \n" +
+      "**Timestamp:**            ${event.timestamp}\n  " +
+      "**Message:**              ${event.message}\n  " +
+      "**Source:**               ${event.source}\n  " +
+      "**Key:**                  ${event.key}\n  " +
+      "**Priority:**             ${event.priority}\n  " +
+      "**Alert:**                ${event.alert}\n  " +
+      "**Timestamp Processing:** ${event.timestamp}\n  " +
+      "**TimeRange Start:**      ${event.timerange_start}\n  " +
+      "**TimeRange End:**        ${event.timerange_end}\n  " +
+      "${if event.fields}\n" +
+      "**Fields:**\n  " +
+      "${foreach event.fields field}  ${field.key}: ${field.value}  \n" +
       "${end}\n" +
       "${if backlog}\n" +
-      "--- [Backlog] ------------------------------------\n" +
-      "Last messages accounting for this alert:\n" +
+      "# --- [Backlog] ------------------------------------  \n" +
+      "**Messages:**  " +
       "${foreach backlog message}\n" +
-      "${message}\n\n" +
+      "```\n" +
+      "${message}  \n" +
+      "```\n" +
       "${end}\n" +
-      "${end}\n" +
-      "\n";
+      "${end}";
 
   @JsonProperty(FIELD_WEBHOOK_URL)
   @NotBlank
