@@ -5,23 +5,35 @@ import lodash from 'lodash';
 import {Input} from 'components/bootstrap';
 import FormsUtils from 'util/FormsUtils';
 
-const DEFAULT_MSG = `Alert Description: \${check_result.resultDescription}  
-Date: \${check_result.triggeredAt}  
-Stream ID: \${stream.id}  
-Stream title: \${stream.title}  
-Stream description: \${stream.description}  
-Alert Condition Title: \${alert_condition.title}  
-\${if stream_url}Stream URL: \${stream_url}\${end}  
-Triggered condition: \${check_result.triggeredCondition}  
-
-**-- Backlog --**  
+const DEFAULT_MSG = `
+--- [Event Definition] ---------------------------  
+ID:          \${event_definition_id  
+Type:        \${event_definition_type}  
+Title:       \${event_definition_title}  
+Description: \${event_definition_description}  
+--- [Event] --------------------------------------  
+Event:                \${event}  
+--- [Event Detail] -------------------------------  
+Timestamp:            \${event.timestamp}  
+Message:              \${event.message}  
+Source:               \${event.source}  
+Key:                  \${event.key}  
+Priority:             \${event.priority}  
+Alert:                \${event.alert}  
+Timestamp Processing: \${event.timestamp}  
+Timerange Start:      \${event.timerange_start}  
+Timerange End:        \${event.timerange_end}  
+Fields:  
+\${foreach event.fields field}  \${field.key}: \${field.value}  
+\${end}  
 \${if backlog}  
-\${foreach backlog message}
+--- [Backlog] ------------------------------------  
+Last messages accounting for this alert:  
+\${foreach backlog message}  
 \${message}  
+\${end}  
 \${end}
-\${else}
-There is no backlog message  
-\${end}`;
+`
 
 class TeamsNotificationForm extends React.Component {
   static propTypes = {

@@ -16,8 +16,7 @@
   ],
   "author": "Shohei Hida",
   "license": "GNU General Public License v3.0",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "graylog-web-plugin": "file:../graylog2-server/graylog2-web-interface/packages/graylog-web-plugin"
   }

@@ -36,21 +36,34 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
-  public static final String DEFAULT_MESSAGE = "Alert Description: ${check_result.resultDescription}\n" +
-      "Date: ${check_result.triggeredAt}\n" +
-      "Stream ID: ${stream.id}\n" +
-      "Stream title: ${stream.title}\n" +
-      "Stream description: ${stream.description}\n" +
-      "Alert Condition Title: ${alert_condition.title}\n" +
-      "${if stream_url}Stream URL: ${stream_url}${end}\n" +
-      "Triggered condition: ${check_result.triggeredCondition}\n" +
-      "${if backlog}" +
-      "${foreach backlog message}" +
+  public static final String DEFAULT_MESSAGE = "--- [Event Definition] ---------------------------\n" +
+      "ID:          ${event_definition_id\n" +
+      "Type:        ${event_definition_type}\n" +
+      "Title:       ${event_definition_title}\n" +
+      "Description: ${event_definition_description}\n" +
+      "--- [Event] --------------------------------------\n" +
+      "Event:                ${event}\n" +
+      "--- [Event Detail] -------------------------------\n" +
+      "Timestamp:            ${event.timestamp}\n" +
+      "Message:              ${event.message}\n" +
+      "Source:               ${event.source}\n" +
+      "Key:                  ${event.key}\n" +
+      "Priority:             ${event.priority}\n" +
+      "Alert:                ${event.alert}\n" +
+      "Timestamp Processing: ${event.timestamp}\n" +
+      "Timerange Start:      ${event.timerange_start}\n" +
+      "Timerange End:        ${event.timerange_end}\n" +
+      "Fields:\n" +
+      "${foreach event.fields field}  ${field.key}: ${field.value}\n" +
+      "${end}\n" +
+      "${if backlog}\n" +
+      "--- [Backlog] ------------------------------------\n" +
+      "Last messages accounting for this alert:\n" +
+      "${foreach backlog message}\n" +
       "${message}\n\n" +
-      "${end}" +
-      "${else}" +
-      "<No backlog>\n" +
-      "${end}";
+      "${end}\n" +
+      "${end}\n" +
+      "\n";
 
   @JsonProperty(FIELD_WEBHOOK_URL)
   @NotBlank
@@ -139,13 +152,13 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
         .build();
   }
 
-  private boolean validURL(String uri) {
+  private boolean validURL(final String uri) {
     if (StringUtils.isEmpty(uri)) {
       return true;
     }
     try {
       new URI(Objects.requireNonNull(uri));
-    } catch (URISyntaxException ex) {
+    } catch (final URISyntaxException ex) {
       return false;
     }
     return true;

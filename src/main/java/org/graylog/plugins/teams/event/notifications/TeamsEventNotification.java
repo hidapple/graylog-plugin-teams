@@ -43,8 +43,10 @@ public class TeamsEventNotification implements EventNotification {
   public void execute(final EventNotificationContext ctx) throws EventNotificationException {
     final TeamsEventNotificationConfig config = (TeamsEventNotificationConfig) ctx.notificationConfig();
     final ImmutableList<MessageSummary> backlog = notificationCallbackService.getBacklogForEvent(ctx);
+
+    final Map<String, Object> model = getModel(ctx, backlog);
     try {
-      teamsClient.postMessageCard(config, getModel(ctx, backlog));
+      teamsClient.postMessageCard(config, model);
     } catch (final TeamsClientException e) {
       throw new PermanentEventNotificationException("TeamsEventNotification is triggered but failed sending request", e);
     }
