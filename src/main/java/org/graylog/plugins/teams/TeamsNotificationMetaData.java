@@ -1,24 +1,23 @@
 package org.graylog.plugins.teams;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.Set;
 import org.graylog2.plugin.PluginMetaData;
 import org.graylog2.plugin.ServerStatus;
 import org.graylog2.plugin.Version;
 
-import java.net.URI;
-import java.util.Collections;
-import java.util.Set;
-
-public class TeamsMetaData implements PluginMetaData {
+public class TeamsNotificationMetaData implements PluginMetaData {
     private static final String PLUGIN_PROPERTIES = "org.graylog.plugins.graylog-plugin-teams/graylog-plugin.properties";
 
     @Override
     public String getUniqueId() {
-        return "org.graylog.plugins.teams.TeamsPlugin";
+        return "org.graylog.plugins.teams.TeamsNotificationPlugin";
     }
 
     @Override
     public String getName() {
-        return "Teams";
+        return "Microsoft Teams Notification";
     }
 
     @Override

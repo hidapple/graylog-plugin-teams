@@ -1,22 +1,22 @@
 package org.graylog.plugins.teams.client;
 
+import com.floreysoft.jmte.Engine;
+import com.google.common.base.Strings;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Objects;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.graylog.plugins.teams.alerts.TeamsNotificationConfig;
-import org.graylog2.plugin.configuration.Configuration;
+import javax.inject.Inject;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,60 +24,71 @@ public class TeamsClient {
 
   private static final Logger LOG = LoggerFactory.getLogger(TeamsClient.class);
 
-  private final URL webhook;
-  private Proxy proxy;
+  private final Engine templateEngine;
 
-  public TeamsClient(Configuration config) throws TeamsClientException {
-    final String webhookStr = config.getString(TeamsNotificationConfig.WEBHOOK_URL);
-    try {
-     this.webhook = new URL(Objects.requireNonNull(webhookStr));
-    } catch (MalformedURLException ex) {
-      throw new TeamsClientException("Teams webhook URL is invalid format. URL=" + webhookStr, ex);
+  @Inject
+  public TeamsClient(final Engine engine) {
+    this.templateEngine = engine;
+  }
+
+  public void postMessageCard(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
+    // Create HTTP client
+    final OkHttpClient client;
+    if (Strings.isNullOrEmpty(config.proxyURL())) {
+      client = new OkHttpClient();
+    } else {
+      client = new OkHttpClient.Builder().proxy(buildProxy(config.proxyURL())).build();
     }
 
-    final String proxyStr = config.getString(TeamsNotificationConfig.PROXY);
-    if (!StringUtils.isEmpty(proxyStr)) {
-      try {
-        URI uri = new URI(proxyStr);
-        this.proxy = new Proxy(Type.HTTP, new InetSocketAddress(uri.getHost(), uri.getPort()));
-      } catch (URISyntaxException ex) {
-        throw new TeamsClientException("Proxy URI is invalid format. URI=" + proxyStr, ex);
+    // Create request
+    final HttpUrl url = HttpUrl.parse(config.webhookURL());
+    if (Objects.isNull(url)) {
+      throw new TeamsClientException("Teams webhook URL is invalid format. URL=" + config.webhookURL());
+    }
+    final RequestBody reqBody = RequestBody.create(MediaType.get("application/json"), createRequest(config, model).toJsonString());
+    final Request req = new Request.Builder()
+        .url(url)
+        .post(reqBody)
+        .build();
+    LOG.debug("Request: " + req.toString());
+
+    // Response
+    try (final Response res = client.newCall(req).execute()) {
+      if (!res.isSuccessful()) {
+        LOG.debug(res.toString());
+        throw new TeamsClientException("Teams webhook returned unexpected response status. HTTP Status=" + res.code());
       }
+    } catch (final IOException ex) {
+      throw new TeamsClientException("Failed to send POST request to the Teams webhook.", ex);
     }
   }
 
-  public void postMessageCard(TeamsMessageCard messageCard) throws TeamsClientException {
-    HttpURLConnection conn;
+  private TeamsMessageCard createRequest(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
+    return new TeamsMessageCard(
+        config.color(),
+        "Graylog Event Notification is triggered",
+        "Event: " + model.get("event_definition_title"),
+        buildMessage(config, model),
+        config.graylogURL()
+    );
+  }
+
+  private Proxy buildProxy(final String proxyURL) {
     try {
-      if (Objects.isNull(this.proxy)) {
-        conn = (HttpURLConnection) this.webhook.openConnection();
-      } else {
-        conn = (HttpURLConnection) this.webhook.openConnection(this.proxy);
-      }
-      conn.setRequestMethod("POST");
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setDoOutput(true);
-    } catch (IOException ex) {
-      throw new TeamsClientException("Failed to open connection to the Teams webhook", ex);
+      final URI uri = new URI(proxyURL);
+      return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(uri.getHost(), uri.getPort()));
+    } catch (final URISyntaxException e) {
+      throw new TeamsClientException("Proxy URL is invalid format. Proxy URL=" + proxyURL, e);
     }
+  }
 
-    try (OutputStreamWriter w = new OutputStreamWriter(conn.getOutputStream())) {
-      w.write(messageCard.toJsonString());
-      w.flush();
-
-      if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        if (LOG.isDebugEnabled()) {
-          try (InputStream in = conn.getInputStream()) {
-            String res = IOUtils.toString(in, StandardCharsets.UTF_8);
-            LOG.debug("HTTP response body={}", res);
-          } catch (IOException ex) {
-            LOG.debug("Failed to get HTTP response body", ex);
-          }
-        }
-        throw new TeamsClientException("Teams webhook returned unexpected response status. HTTP Status=" + conn.getResponseCode());
-      }
-    } catch (IOException ex) {
-      throw new TeamsClientException("Failed to send POST request to the Teams webhook.", ex);
+  private String buildMessage(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
+    final String template;
+    if (Strings.isNullOrEmpty(config.message())) {
+      template = TeamsEventNotificationConfig.DEFAULT_MESSAGE;
+    } else {
+      template = config.message();
     }
+    return templateEngine.transform(template, model);
   }
 }

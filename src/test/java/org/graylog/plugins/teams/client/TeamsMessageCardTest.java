@@ -1,13 +1,12 @@
 package org.graylog.plugins.teams.client;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.Test;
 
 class TeamsMessageCardTest {
 
@@ -20,28 +19,6 @@ class TeamsMessageCardTest {
         + "\"themeColor\":\"0076D7\","
         + "\"title\":\"Title\","
         + "\"text\":\"Text\""
-        + "}";
-
-    // When
-    String actual = sut.toJsonString();
-
-    // Then
-    assertJSON(expected, actual);
-  }
-
-  @Test
-  void toJsonString_WithDetailMsg() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", "Detail Message Text", "");
-    String expected = "{"
-        + "\"@type\":\"MessageCard\","
-        + "\"@context\":\"https://schema.org/extensions\","
-        + "\"themeColor\":\"0076D7\","
-        + "\"title\":\"Title\","
-        + "\"text\":\"Text\","
-        + "\"sections\":[{"
-        + "\"title\":\"Detail Message:\","
-        + "\"text\":\"Detail Message Text\""
-        + "}]"
         + "}";
 
     // When
@@ -77,10 +54,10 @@ class TeamsMessageCardTest {
     assertJSON(expected, actual);
   }
 
-  private void assertJSON(String json1, String json2) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode node1 = mapper.readTree(json1);
-    JsonNode node2 = mapper.readTree(json2);
+  private void assertJSON(final String json1, final String json2) throws IOException {
+    final ObjectMapper mapper = new ObjectMapper();
+    final JsonNode node1 = mapper.readTree(json1);
+    final JsonNode node2 = mapper.readTree(json2);
 
     assertEquals(node1, node2);
   }

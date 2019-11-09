@@ -6,7 +6,8 @@
 A Graylog alarm callback plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software)
 MessageCard post.
 
-**Required Graylog version:** 2.4.0 and later
+**Required Graylog version:** 3.1.0 and later  
+(If your Graylog version is under 3.1.0, you can still use `graylog-plugin-teams-v1`)
 
 Installation
 ------------
@@ -26,17 +27,20 @@ First of all, you need to publish your Teams incoming webhook. See [Microsoft do
 to know detail and how to publish your Teams incoming webhook.
 
 #### 2. Create Graylog notification
-Create Graylog notification of your stream and choose `Microsoft Teams Alarm Callback` as Notification type.
+Create Graylog notification and choose `Microsoft Teams Notification` as Notification type.
 
-#### 3. Configure Microsoft Teams Alarm Callback
+#### 3. Configure Microsoft Teams Notification
 Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
 
-![Teams notification configuraiton](img/configuration.png)
+![Teams notification configuraiton](https://github.com/hidapple/graylog-plugin-teams/blob/master/img/configuration.png)
 
-#### 4. Receive notification
+#### 4. Create Graylog Event Definitions
+Create Graylog Event definition and set Microsoft Teams Notification you created at #3 as its Notification.
+
+#### 5. Receive notification
 You will receive notification message like below.
 
-![Teams notification message](img/message.png)
+![Teams notification message](https://github.com/hidapple/graylog-plugin-teams/blob/master/img/message.png)
 
 Getting development started
 ---------------------------
@@ -64,4 +68,5 @@ This sets the version numbers, creates a tag and pushes to GitHub. Travis CI wil
 
 License
 -------
-See [LICENSE](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
+
+[GNU General Public License](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
