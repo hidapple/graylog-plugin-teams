@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Table, Button } from 'react-bootstrap';
-
-import styles from './CommonNotificationSummary.css';
+import styles from 'CommonNotificationSummary.css';
 
 class CommonNotificationSummary extends React.Component {
   static propTypes = {
@@ -36,15 +34,15 @@ class CommonNotificationSummary extends React.Component {
               {displayDetails ? 'Less details' : 'More details'}
             </Button>
             {displayDetails && (
-            <Table condensed hover className={styles.fixedTable}>
-              <tbody>
-                <tr>
-                  <td>Description</td>
-                  <td>{notification.description || 'No description given'}</td>
-                </tr>
-                {children}
-              </tbody>
-            </Table>
+              <Table condensed hover className={styles.fixedTable}>
+                <tbody>
+                  <tr>
+                    <td>Description</td>
+                    <td>{notification.description || 'No description given'}</td>
+                  </tr>
+                  {children}
+                </tbody>
+              </Table>
             )}
           </dd>
         </dl>
