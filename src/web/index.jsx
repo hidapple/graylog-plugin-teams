@@ -10,7 +10,7 @@ PluginStore.register(new PluginManifest({}, {
       displayName: 'Microsoft Teams Notification',
       formComponent: TeamsNotificationForm,
       summaryComponent: TeamsNotificationSummary,
-      defaultConfig: TeamsNotificationForm.defaultConfig
-    }
-  ]
+      defaultConfig: TeamsNotificationForm.defaultConfig,
+    },
+  ],
 }));
