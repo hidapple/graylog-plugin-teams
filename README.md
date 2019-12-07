@@ -3,11 +3,10 @@
 [![Build Status](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)
 
 
-A Graylog alarm callback plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software)
-MessageCard post.
+A Graylog event notification plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software) MessageCard post.
 
 **Required Graylog version:** 3.1.0 and later  
-(If your Graylog version is under 3.1.0, you can still use `graylog-plugin-teams-v1`)
+(In case your Graylog version is lower than 3.1.0, you can still use `graylog-plugin-teams` version `1.x.x`)
 
 Installation
 ------------
@@ -42,6 +41,16 @@ You will receive notification message like below.
 
 ![Teams notification message](https://github.com/hidapple/graylog-plugin-teams/blob/master/img/message.png)
 
+Contribution
+------------
+
+1. Fork the repository (https://github.com/hidapple/graylog-plugin-teams/fork)
+1. Create your feature branch
+1. Commit your changes
+1. Rebase your local changes against the master branch
+1. Make sure your code can be packaged by `mvn` without any errors
+1. Create a new Pull Request
+
 Getting development started
 ---------------------------
 
@@ -70,3 +79,8 @@ License
 -------
 
 [GNU General Public License](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
+
+Author
+------
+
+[Shohei Hida](https://github.com/hidapple)
