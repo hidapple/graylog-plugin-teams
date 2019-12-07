@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import CommonNotificationSummary from './CommonNotificationSummary';
+import CommonNotificationSummary from "./CommonNotificationSummary";
 
 class TeamsNotificationSummary extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     notification: PropTypes.object,
-    definitionNotification: PropTypes.object.isRequired,
+    definitionNotification: PropTypes.object.isRequired
   };
 
   static defaultProps = {
-    notification: {},
+    notification: {}
   };
 
   render() {
