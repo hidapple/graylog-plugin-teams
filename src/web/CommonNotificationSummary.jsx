@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Table, Button } from 'react-bootstrap';
-import styles from 'CommonNotificationSummary.css';
+import React from "react";
+import PropTypes from "prop-types";
+import { Table, Button } from "react-bootstrap";
+import styles from "CommonNotificationSummary.css";
 
 class CommonNotificationSummary extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     notification: PropTypes.object.isRequired,
     definitionNotification: PropTypes.object.isRequired,
-    children: PropTypes.element.isRequired,
+    children: PropTypes.element.isRequired
   };
 
   state = {
-    displayDetails: false,
+    displayDetails: false
   };
 
   toggleDisplayDetails = () => {
@@ -29,16 +29,26 @@ class CommonNotificationSummary extends React.Component {
         <dl>
           <dd>{type}</dd>
           <dd>
-            <Button bsStyle="link" className="btn-text" bsSize="xsmall" onClick={this.toggleDisplayDetails}>
-              <i className={`fa fa-caret-${displayDetails ? 'down' : 'right'}`} />&nbsp;
-              {displayDetails ? 'Less details' : 'More details'}
+            <Button
+              bsStyle="link"
+              className="btn-text"
+              bsSize="xsmall"
+              onClick={this.toggleDisplayDetails}
+            >
+              <i
+                className={`fa fa-caret-${displayDetails ? "down" : "right"}`}
+              />
+              &nbsp;
+              {displayDetails ? "Less details" : "More details"}
             </Button>
             {displayDetails && (
               <Table condensed hover className={styles.fixedTable}>
                 <tbody>
                   <tr>
                     <td>Description</td>
-                    <td>{notification.description || 'No description given'}</td>
+                    <td>
+                      {notification.description || "No description given"}
+                    </td>
                   </tr>
                   {children}
                 </tbody>

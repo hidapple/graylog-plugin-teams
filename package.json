@@ -1,6 +1,6 @@
 {
   "name": "Teams",
-  "version": "2.0.0",
+  "version": "2.0.1-SNAPSHOT",
   "description": "",
   "repository": {
     "type": "git",
@@ -9,6 +9,7 @@
   "scripts": {
     "build": "webpack",
     "lint": "eslint -c .eslintrc.json src/web/**/*.jsx",
+    "format": "prettier src/web/**/*.jsx --write",
     "test": "jest"
   },
   "keywords": [
@@ -25,6 +26,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "graylog-web-plugin": "file:../graylog2-server/graylog2-web-interface/packages/graylog-web-plugin"
+    "graylog-web-plugin": "file:../graylog2-server/graylog2-web-interface/packages/graylog-web-plugin",
+    "prettier": "^1.19.1"
   }
 }
