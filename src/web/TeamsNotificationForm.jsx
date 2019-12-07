@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import lodash from 'lodash';
-import { Input } from 'components/bootstrap';
+import {Input} from 'components/bootstrap';
 import FormsUtils from 'util/FormsUtils';
 
 const DEFAULT_MSG = `# --- [Event Definition] ---------------------------  
@@ -103,6 +103,7 @@ class TeamsNotificationForm extends React.Component {
           bsStyle={validation.errors.message ? 'error' : null}
           help={lodash.get(validation, 'errors.message[0]', 'Detail message supporting basic Markdown syntax')}
           value={config.message || ''}
+          rows={15}
           onChange={this.handleChange}/>
         <Input
           id="notification-proxy-url"
