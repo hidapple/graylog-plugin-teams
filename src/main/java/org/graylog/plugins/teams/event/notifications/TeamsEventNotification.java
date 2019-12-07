@@ -14,6 +14,7 @@ import org.graylog.events.notifications.PermanentEventNotificationException;
 import org.graylog.events.processor.EventDefinitionDto;
 import org.graylog.plugins.teams.client.TeamsClient;
 import org.graylog.plugins.teams.client.TeamsClientException;
+import org.graylog.scheduler.JobTriggerDto;
 import org.graylog2.jackson.TypeReferences;
 import org.graylog2.plugin.MessageSummary;
 
@@ -54,13 +55,14 @@ public class TeamsEventNotification implements EventNotification {
 
   private Map<String, Object> getModel(final EventNotificationContext ctx, final ImmutableList<MessageSummary> backlog) {
     final Optional<EventDefinitionDto> definitionDto = ctx.eventDefinition();
+    final Optional<JobTriggerDto> jobTriggerDto = ctx.jobTrigger();
     final EventNotificationModelData modelData = EventNotificationModelData.builder()
         .eventDefinitionId(definitionDto.map(EventDefinitionDto::id).orElse(UNKNOWN))
         .eventDefinitionType(definitionDto.map(d -> d.config().type()).orElse(UNKNOWN))
         .eventDefinitionTitle(definitionDto.map(EventDefinitionDto::title).orElse(UNKNOWN))
         .eventDefinitionDescription(definitionDto.map(EventDefinitionDto::description).orElse(UNKNOWN))
-        .jobDefinitionId(ctx.jobTrigger().jobDefinitionId())
-        .jobTriggerId(ctx.jobTrigger().id())
+        .jobDefinitionId(jobTriggerDto.map(JobTriggerDto::jobDefinitionId).orElse(UNKNOWN))
+        .jobTriggerId(jobTriggerDto.map(JobTriggerDto::id).orElse(UNKNOWN))
         .event(ctx.event())
         .backlog(backlog)
         .build();

@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.graylog.plugins</groupId>
         <artifactId>graylog-plugin-web-parent</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.3</version>
         <relativePath>../graylog2-server/graylog-plugin-parent/graylog-plugin-web-parent</relativePath>
     </parent>
 
     <groupId>org.graylog.plugins</groupId>
     <artifactId>graylog-plugin-teams</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -45,7 +45,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <graylog.version>3.1.0</graylog.version>
+        <graylog.version>3.1.3</graylog.version>
 
         <!-- Plugins will not be deployed by default - set to `false` if you actually want to deploy it -->
         <maven.source.skip>true</maven.source.skip>
