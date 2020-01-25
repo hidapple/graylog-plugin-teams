@@ -5,7 +5,7 @@
 
 A Graylog event notification plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software) MessageCard post.
 
-**Required Graylog version:** 3.1.0 and later  
+**Required Graylog version:** 3.1.3 and later  
 \* In case your Graylog version is 3.1.0 - 3.1.2, please use `graylog-plugin-teams` version `2.0.0`.  
 \* In case your Graylog version is lower than 3.1.0, you can still use `graylog-plugin-teams` version `1.x.x`.  
 
