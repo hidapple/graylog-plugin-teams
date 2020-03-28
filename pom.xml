@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.4.1</version>
+            <version>5.6.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -133,7 +133,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+                <version>2.22.2</version>
                 <configuration>
                     <forkCount>2</forkCount>
                     <reuseForks>true</reuseForks>
@@ -146,7 +146,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -194,7 +194,7 @@
             <plugin>
                 <artifactId>jdeb</artifactId>
                 <groupId>org.vafer</groupId>
-                <version>1.4</version>
+                <version>1.8</version>
                 <configuration>
                     <deb>${project.build.directory}/${project.artifactId}-${project.version}.deb</deb>
                     <dataSet>
@@ -216,7 +216,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>rpm-maven-plugin</artifactId>
-                <version>2.1.4</version>
+                <version>2.2.0</version>
                 <configuration>
                     <group>Application/Internet</group>
                     <prefixes>
