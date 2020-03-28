@@ -12,7 +12,7 @@
 
     <groupId>org.graylog.plugins</groupId>
     <artifactId>graylog-plugin-teams</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.0.2</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

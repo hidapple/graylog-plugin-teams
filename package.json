@@ -1,6 +1,6 @@
 {
   "name": "Teams",
-  "version": "2.0.2-SNAPSHOT",
+  "version": "2.0.2",
   "description": "",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "graylog"
   ],
   "author": "Shohei Hida",
-  "license": "GNU General Public License v3.0",
+  "license": "GPL-3.0",
   "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.1.0",
