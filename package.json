@@ -27,6 +27,6 @@
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^2.5.1",
     "graylog-web-plugin": "file:../graylog2-server/graylog2-web-interface/packages/graylog-web-plugin",
-    "prettier": "^2.0.5"
+    "prettier": "^2.1.2"
   }
 }
