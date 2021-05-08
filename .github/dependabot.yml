@@ -1,0 +1,34 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "20:00"
+  open-pull-requests-limit: 10
+  reviewers:
+  - hidapple
+  labels:
+  - dependencies
+  ignore:
+  - dependency-name: org.graylog.plugins:graylog-plugin-web-parent
+    versions:
+    - 4.0.1
+    - 4.0.2
+  - dependency-name: org.graylog2:graylog2-server
+    versions:
+    - 4.0.1
+    - 4.0.2
+  - dependency-name: org.junit.jupiter:junit-jupiter
+    versions:
+    - 5.7.0
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "20:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint-plugin-react
+    versions:
+    - 7.22.0
