@@ -42,7 +42,7 @@ public class TeamsNotificationMetaData implements PluginMetaData {
 
     @Override
     public Version getRequiredVersion() {
-        return Version.fromPluginProperties(getClass(), PLUGIN_PROPERTIES, "graylog.version", Version.from(0, 0, 0, "unknown"));
+        return Version.fromPluginProperties(getClass(), PLUGIN_PROPERTIES, "graylog.version.required", Version.from(0, 0, 0, "unknown"));
     }
 
     @Override
