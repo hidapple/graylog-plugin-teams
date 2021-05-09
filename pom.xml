@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    graylog-plugin-teams - Graylog Microsoft Teams plugin
+    Copyright © 2021 Shohei Hida
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+-->
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -244,6 +263,45 @@
                         </mapping>
                     </mappings>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <aggregate>false</aggregate>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                        <jsx>SLASHSTAR_STYLE</jsx>
+                        <ts>SLASHSTAR_STYLE</ts>
+                        <tsx>SLASHSTAR_STYLE</tsx>
+                    </mapping>
+                    <licenseSets>
+                        <licenseSet>
+                            <header>license-template.txt</header>
+                            <properties>
+                                <project.inceptionYear>2021</project.inceptionYear>
+                                <owner>Shohei Hida</owner>
+                            </properties>
+                            <includes>
+                                <include>**/src/main/java/**</include>
+                                <include>**/src/test/java/**</include>
+                                <include>**/pom.xml</include>
+
+                                <include>*.js</include>
+                                <include>src/web/**/*.js</include>
+                                <include>src/web/**/*.jsx</include>
+                            </includes>
+                        </licenseSet>
+                    </licenseSets>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
