@@ -1,4 +1,4 @@
-# Teams Plugin for Graylog
+# Microsoft Teams Plugin for Graylog
 
 [![Build Status](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)
 
