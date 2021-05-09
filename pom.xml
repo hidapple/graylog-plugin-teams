@@ -31,7 +31,7 @@
 
     <groupId>org.graylog.plugins</groupId>
     <artifactId>graylog-plugin-teams</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
