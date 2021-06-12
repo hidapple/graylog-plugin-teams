@@ -213,7 +213,7 @@
             <plugin>
                 <artifactId>jdeb</artifactId>
                 <groupId>org.vafer</groupId>
-                <version>1.8</version>
+                <version>1.9</version>
                 <configuration>
                     <deb>${project.build.directory}/${project.artifactId}-${project.version}.deb</deb>
                     <dataSet>
