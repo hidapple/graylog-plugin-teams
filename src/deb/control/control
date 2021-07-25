@@ -4,5 +4,5 @@ Architecture: all
 Maintainer: Shohei Hida
 Section: web
 Priority: optional
-Depends: graylog-server | graylog-radio
+Depends: graylog-server
 Description: [[description]]
