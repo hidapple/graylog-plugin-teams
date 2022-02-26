@@ -1,6 +1,6 @@
 # Microsoft Teams Plugin for Graylog
 
-[![Build Status](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=master)
+[![Build Status](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=main)](https://travis-ci.org/hidapple/graylog-plugin-teams.svg?branch=main)
 
 
 A Graylog event notification plugin for sending [Microsoft Teams](https://products.office.com/en-us/microsoft-teams/group-chat-software) MessageCard post.
@@ -32,7 +32,7 @@ Create Graylog notification and choose `Microsoft Teams Notification` as Notific
 #### 3. Configure Microsoft Teams Notification
 Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
 
-![Teams notification configuraiton](https://github.com/hidapple/graylog-plugin-teams/blob/master/img/configuration.png)
+![Teams notification configuraiton](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/configuration.png)
 
 #### 4. Create Graylog Event Definitions
 Create Graylog Event definition and set Microsoft Teams Notification you created at #3 as its Notification.
@@ -40,7 +40,7 @@ Create Graylog Event definition and set Microsoft Teams Notification you created
 #### 5. Receive notification
 You will receive notification message like below.
 
-![Teams notification message](https://github.com/hidapple/graylog-plugin-teams/blob/master/img/message.png)
+![Teams notification message](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/message.png)
 
 Contribution
 ------------
@@ -48,7 +48,7 @@ Contribution
 1. Fork the repository (https://github.com/hidapple/graylog-plugin-teams/fork)
 1. Create your feature branch
 1. Commit your changes
-1. Rebase your local changes against the master branch
+1. Rebase your local changes against the main branch
 1. Make sure your code can be packaged by `mvn` without any errors
 1. Create a new Pull Request
 
@@ -79,7 +79,7 @@ This sets the version numbers, creates a tag and pushes to GitHub. Travis CI wil
 License
 -------
 
-[GNU General Public License 3.0](https://github.com/hidapple/graylog-plugin-teams/blob/master/LICENSE)
+[GNU General Public License 3.0](https://github.com/hidapple/graylog-plugin-teams/blob/main/LICENSE)
 
 Author
 ------
