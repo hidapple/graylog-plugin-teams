@@ -60,7 +60,7 @@ class TeamsMessageCardTest {
         + "\"text\":\"Text\","
         + "\"potentialAction\":[{"
         + "\"@type\":\"OpenUri\","
-        + "\"name\":\"Open Graylog - message 1\","
+        + "\"name\":\"Open Graylog\","
         + "\"targets\":[{"
         + "\"os\":\"default\","
         + "\"uri\":\"http://localhost:9000/messages/index/id\""
