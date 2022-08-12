@@ -36,7 +36,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig;
-import org.graylog2.plugin.MessageSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
