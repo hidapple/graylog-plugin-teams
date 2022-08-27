@@ -24,6 +24,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.inject.Inject;
@@ -67,7 +69,7 @@ public class TeamsClient {
         .url(url)
         .post(reqBody)
         .build();
-    LOG.debug("Request: " + req.toString());
+    LOG.debug("Request: " + req);
 
     // Response
     try (final Response res = client.newCall(req).execute()) {
@@ -81,12 +83,23 @@ public class TeamsClient {
   }
 
   private TeamsMessageCard createRequest(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
+    final List<String> graylogMsgUrls = new ArrayList<>();
+    final Object backlog = model.get("backlog");
+    final String graylogUrl = config.graylogURL().endsWith("/") ? config.graylogURL() : config.graylogURL() + "/";
+    if (backlog instanceof List) {
+      for (final Map<String, Object> msgSummary : (List<Map<String, Object>>) backlog) {
+        graylogMsgUrls.add(graylogUrl + "messages/" + msgSummary.get("index") + "/" + msgSummary.get("id"));
+      }
+    } else {
+      graylogMsgUrls.add(graylogUrl);
+    }
+
     return new TeamsMessageCard(
         config.color(),
         "Graylog Event Notification is triggered",
         "Event: " + model.get("event_definition_title"),
-        buildMessage(config, model),
-        config.graylogURL()
+        buildMessage(config.message(), model),
+        graylogMsgUrls
     );
   }
 
@@ -99,12 +112,12 @@ public class TeamsClient {
     }
   }
 
-  private String buildMessage(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
+  private String buildMessage(final String textTemplate, final Map<String, Object> model) {
     final String template;
-    if (Strings.isNullOrEmpty(config.message())) {
+    if (Strings.isNullOrEmpty(textTemplate)) {
       template = TeamsEventNotificationConfig.DEFAULT_MESSAGE;
     } else {
-      template = config.message();
+      template = textTemplate;
     }
     return templateEngine.transform(template, model);
   }

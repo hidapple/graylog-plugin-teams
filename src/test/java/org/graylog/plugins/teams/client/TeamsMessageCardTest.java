@@ -22,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.ArrayList;
+
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +32,7 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithoutDetailMsgAndGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, StringUtils.EMPTY);
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, new ArrayList<>());
     String expected = "{"
         + "\"@type\":\"MessageCard\","
         + "\"@context\":\"https://schema.org/extensions\","
@@ -47,7 +50,8 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, "http://localhost:9000");
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY,
+        Lists.newArrayList("http://localhost:9000/messages/index/id"));
     String expected = "{"
         + "\"@type\":\"MessageCard\","
         + "\"@context\":\"https://schema.org/extensions\","
@@ -59,7 +63,7 @@ class TeamsMessageCardTest {
         + "\"name\":\"Open Graylog\","
         + "\"targets\":[{"
         + "\"os\":\"default\","
-        + "\"uri\":\"http://localhost:9000\""
+        + "\"uri\":\"http://localhost:9000/messages/index/id\""
         + "}]"
         + "}]"
         + "}";

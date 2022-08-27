@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +39,17 @@ import java.util.Objects;
  */
 public class TeamsMessageCard {
 
-  private String type;
-  private String context;
-  private String themeColor;
-  private String title;
-  private String text;
+  private static final int POTENTIAL_ACTIONS_LIMIT = 3;
+
+  private final String type;
+  private final String context;
+  private final String themeColor;
+  private final String title;
+  private final String text;
   private List<Section> sections;
   private List<PotentialAction> potentialAction;
 
-  public TeamsMessageCard(String color, String title, String text, String detailMsg, String url) {
+  public TeamsMessageCard(String color, String title, String text, String detailMsg, List<String> urls) {
     this.type = "MessageCard";
     this.context = "https://schema.org/extensions";
     this.themeColor = color;
@@ -55,12 +58,18 @@ public class TeamsMessageCard {
     if (!StringUtils.isEmpty(detailMsg)) {
       this.sections = Lists.newArrayList(new Section("Detail Message:", detailMsg));
     }
-    if (!StringUtils.isEmpty(url)) {
-      Map<String, String> target = new HashMap<>();
-      target.put("os", "default");
-      target.put("uri", url);
-      this.potentialAction = Lists.newArrayList(
-          new PotentialAction("OpenUri", "Open Graylog", Lists.newArrayList(target)));
+
+    if (!urls.isEmpty()) {
+      this.potentialAction = new ArrayList<>();
+      final int numberOfPotentialActions = Math.min(urls.size(), POTENTIAL_ACTIONS_LIMIT);
+      for (int i = 1; i <= numberOfPotentialActions; i++) {
+        final Map<String, String> target = new HashMap<>();
+        target.put("os", "default");
+        target.put("uri", urls.get(0));
+
+        this.potentialAction.add(
+            new PotentialAction("OpenUri", numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
+      }
     }
   }
 
