@@ -35,7 +35,7 @@ public class TeamsNotificationMetaData implements PluginMetaData {
 
   @Override
   public String getName() {
-    return "Microsoft Teams Notification";
+    return "Microsoft Teams Notification V2"; // 'Microsoft Teams Notification' was added since Graylog 5
   }
 
   @Override
@@ -55,7 +55,7 @@ public class TeamsNotificationMetaData implements PluginMetaData {
 
   @Override
   public String getDescription() {
-    return "Microsoft Teams plugin";
+    return "Microsoft Teams plugin with extra configuration";
   }
 
   @Override
@@ -66,5 +66,5 @@ public class TeamsNotificationMetaData implements PluginMetaData {
   @Override
   public Set<ServerStatus.Capability> getRequiredCapabilities() {
     return Collections.emptySet();
-    }
+  }
 }

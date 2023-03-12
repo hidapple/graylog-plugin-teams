@@ -27,7 +27,7 @@ First of all, you need to publish your Teams incoming webhook. See [Microsoft do
 to know detail and how to publish your Teams incoming webhook.
 
 #### 2. Create Graylog notification
-Create Graylog notification and choose `Microsoft Teams Notification` as Notification type.
+Create Graylog notification and choose `Microsoft Teams Notification V2` as Notification type.
 
 #### 3. Configure Microsoft Teams Notification
 Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.

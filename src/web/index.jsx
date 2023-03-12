@@ -15,21 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+import 'webpack-entry';
+
 import { PluginManifest, PluginStore } from "graylog-web-plugin/plugin";
 
 import TeamsNotificationForm from "./TeamsNotificationForm";
 import TeamsNotificationSummary from "./TeamsNotificationSummary";
+import TeamsNotificationDetails from './TeamsNotificationDetails';
+
+import packageJson from '../../package.json';
 
 PluginStore.register(
-  new PluginManifest(
-    {},
+  new PluginManifest(packageJson,
     {
       eventNotificationTypes: [
         {
           type: "teams-notification-v2",
-          displayName: "Microsoft Teams Notification",
+          displayName: "Microsoft Teams Notification V2",
           formComponent: TeamsNotificationForm,
           summaryComponent: TeamsNotificationSummary,
+          detailsComponent: TeamsNotificationDetails,
           defaultConfig: TeamsNotificationForm.defaultConfig
         }
       ]
