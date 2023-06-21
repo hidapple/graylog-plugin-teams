@@ -1,0 +1,35 @@
+sudo: required
+dist: trusty
+language: java
+jdk:
+  - oraclejdk8
+addons:
+  apt:
+    packages:
+      - libxml2-utils
+      - rpm
+before_install:
+  - export GRAYLOG_VERSION=$(xmllint --xpath '/*[local-name()="project"]/*[local-name()="properties"]/*[local-name()="graylog.version"]/text()' pom.xml)
+  - echo "Checking out Graylog ${GRAYLOG_VERSION}"
+  - git clone --depth 1 --branch "${GRAYLOG_VERSION}" https://github.com/Graylog2/graylog2-server.git ../graylog2-server
+  - pushd ../graylog2-server
+  - mvn generate-resources -pl graylog2-server -B -V
+  - popd
+before_deploy:
+  - mvn jdeb:jdeb && export RELEASE_DEB_FILE=$(ls target/*.deb)
+  - mvn rpm:rpm && export RELEASE_RPM_FILE=$(find target/ -name '*.rpm' | tail -1)
+  - rm -f target/original-*.jar
+  - export RELEASE_PKG_FILE=$(ls target/*.jar)
+  - echo "Deploying release to GitHub releases"
+deploy:
+  provider: releases
+  api_key:
+    secure: "zOQQpDMzBOy8CGNl+44SuV0O1hmDubcDSVFWojmtxCDbm7FtqRLQqZ/oAWmmkwAmmFzJKK8qXUpXkFb1CIQIqF/OvTuakc40orNkjpWBpK5xdvxSG4Jdm9w3boi97Eip8GxE61IcFS+gACrgVXpqr+nUVxAXItZp6C0S42xQaqvcFZgdTLC/0+Zb36GCLP6Inz/BpldLmn490D2ZoozAWnoD+WYam+FR8MNnCHe0MyoEvTuHwXllHknFIrMYgFxDlzhPScoQuwqfJbjdxpIMHs2ePZkaJkegM1+3G8vP1oGvDWa7cH+ktF9udOfcm/8Qpm7YHQ/J5GFxWObnCO9X8Cp+iY9PVoFC1RO4xFTv4g1JFuGsDu77H/T3iVm0eNTqRamCB0LlztYz+PRpxgMFXZJpFrVO1bqklV4UbVJPPotoiaE7Pj/diOGSrz2tvS891UgdR6B/akiEIsYwRUZTprNchRjDJSTYqa9sQa3dLLxknQdmTMJyDH1YDEMPJDLUlJa2ZXngWUqCHKbIWYVySp3x8fERkmgiLZe1ts/XiaE8h35Mk9aBS5zDIeUsOFkhccYzMbO8YXd/Gc0l/Npf73KSOYARWiN/EnV8e5QtXM1HDktHg/rYaJuvNCsmXWnYvFqN9saiTXoxf1neCULNwHRFME5EcWFOZahfHqdySuM="
+  file:
+    - "${RELEASE_PKG_FILE}"
+    - "${RELEASE_DEB_FILE}"
+    - "${RELEASE_RPM_FILE}"
+  skip_cleanup: true
+  on:
+    tags: true
+    jdk: oraclejdk8
