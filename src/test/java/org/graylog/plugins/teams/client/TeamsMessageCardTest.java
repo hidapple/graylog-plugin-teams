@@ -32,7 +32,7 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithoutDetailMsgAndGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY, new ArrayList<>());
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", new ArrayList<>());
     String expected = "{"
         + "\"@type\":\"MessageCard\","
         + "\"@context\":\"https://schema.org/extensions\","
@@ -50,7 +50,7 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", StringUtils.EMPTY,
+    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text",
         Lists.newArrayList("http://localhost:9000/messages/index/id"));
     String expected = "{"
         + "\"@type\":\"MessageCard\","

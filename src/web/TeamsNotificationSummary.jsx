@@ -49,7 +49,11 @@ class TeamsNotificationSummary extends React.Component {
             <td>{notification.config.color}</td>
           </tr>
           <tr>
-            <td>Message</td>
+            <td>Card title</td>
+            <td>{notification.config.card_title}</td>
+          </tr>
+          <tr>
+            <td>Card body (message)</td>
             <td>{notification.config.message}</td>
           </tr>
           <tr>

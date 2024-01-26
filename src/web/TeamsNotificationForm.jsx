@@ -21,6 +21,7 @@ import lodash from "lodash";
 import { Input } from "components/bootstrap";
 import FormsUtils from "util/FormsUtils";
 
+const DEFAULT_CARD_TITLE = "Graylog Event Notification is triggered";
 const DEFAULT_MSG = `# --- [Event Definition] ---------------------------  
 **ID:**                   \${event_definition_id}  
 **Type:**                 \${event_definition_type}  
@@ -64,6 +65,7 @@ class TeamsNotificationForm extends React.Component {
     webhook_url: "",
     graylog_url: "",
     color: "0076D7",
+    card_title: DEFAULT_CARD_TITLE,
     message: DEFAULT_MSG,
     proxy_url: ""
   };
@@ -124,9 +126,24 @@ class TeamsNotificationForm extends React.Component {
           onChange={this.handleChange}
         />
         <Input
+          id="notification-card-title"
+          name="card_title"
+          label="Card title"
+          type="text"
+          bsStyle={validation.errors.message ? "error" : null}
+          help={lodash.get(
+            validation,
+            "errors.message[0]",
+            "Card title supporting basic Markdown syntax"
+          )}
+          value={config.card_title || ""}
+          rows={15}
+          onChange={this.handleChange}
+        />
+        <Input
           id="notification-message"
           name="message"
-          label="Message"
+          label="Card body (message)"
           type="textarea"
           bsStyle={validation.errors.message ? "error" : null}
           help={lodash.get(
