@@ -65,7 +65,7 @@ public class TeamsMessageCard {
         target.put("uri", urls.get(0));
 
         this.potentialAction.add(
-            new PotentialAction("OpenUri", numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
+            new PotentialAction(numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
       }
     }
   }
@@ -99,8 +99,8 @@ public class TeamsMessageCard {
     List<Map<String, String>> targets;
 
     @JsonCreator
-    PotentialAction(String type, String name, List<Map<String, String>> targets) {
-      this.type = type;
+    PotentialAction(String name, List<Map<String, String>> targets) {
+      this.type = "OpenUri";
       this.name = name;
       this.targets = targets;
     }
