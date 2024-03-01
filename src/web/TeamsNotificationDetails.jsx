@@ -25,7 +25,8 @@ const TeamsNotificationDetails = ({ notification }) => {
       <ReadOnlyFormGroup label="Webhook URL" value={notification.config.webhook_url} />
       <ReadOnlyFormGroup label="Graylog URL" value={notification.config.graylog_url} />
       <ReadOnlyFormGroup label="Color" value={notification.config.color} />
-      <ReadOnlyFormGroup label="Message" value={notification.config.message} />
+      <ReadOnlyFormGroup label="Card title" value={notification.config.card_title} />
+      <ReadOnlyFormGroup label="Card body" value={notification.config.message} />
       { notification.config.proxy_url
         ? <ReadOnlyFormGroup label="Proxy URL" value={notification.config.proxy_url} />
         : null}

@@ -69,12 +69,12 @@ public class TeamsClient {
         .url(url)
         .post(reqBody)
         .build();
-    LOG.debug("Request: " + req);
+    LOG.debug("Request: {}", req);
 
     // Response
     try (final Response res = client.newCall(req).execute()) {
       if (!res.isSuccessful()) {
-        LOG.debug(res.toString());
+        LOG.debug("Failed response from Teams: {}", res);
         throw new TeamsClientException("Teams webhook returned unexpected response status. HTTP Status=" + res.code());
       }
     } catch (final IOException ex) {
@@ -96,9 +96,8 @@ public class TeamsClient {
 
     return new TeamsMessageCard(
         config.color(),
-        "Graylog Event Notification is triggered",
-        "Event: " + model.get("event_definition_title"),
-        buildMessage(config.message(), model),
+        buildTemplateText(config.cardTitle(), TeamsEventNotificationConfig.DEFAULT_CARD_TITLE, model),
+        buildTemplateText(config.message(), TeamsEventNotificationConfig.DEFAULT_MESSAGE, model),
         graylogMsgUrls
     );
   }
@@ -112,10 +111,10 @@ public class TeamsClient {
     }
   }
 
-  private String buildMessage(final String textTemplate, final Map<String, Object> model) {
+  private String buildTemplateText(final String textTemplate, final String defaultText, final Map<String, Object> model) {
     final String template;
     if (Strings.isNullOrEmpty(textTemplate)) {
-      template = TeamsEventNotificationConfig.DEFAULT_MESSAGE;
+      template = defaultText;
     } else {
       template = textTemplate;
     }

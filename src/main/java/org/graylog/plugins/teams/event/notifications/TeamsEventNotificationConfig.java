@@ -48,11 +48,16 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   public static final String FIELD_WEBHOOK_URL = "webhook_url";
   public static final String FIELD_GRAYLOG_URL = "graylog_url";
   public static final String FIELD_COLOR = "color";
-  public static final String FIELD_MESSAGE = "message";
+  public static final String FIELD_CARD_TITLE = "card_title";
+  public static final String FIELD_MESSAGE = "message"; // card body
   public static final String FIELD_PROXY_URL = "proxy_url";
 
   // Default values
   private static final String DEFAULT_COLOR = "0076D7";
+  public static final String DEFAULT_CARD_TITLE = "Graylog Event Notification is triggered";
+  /**
+   * Card body
+   */
   public static final String DEFAULT_MESSAGE = "# --- [Event Definition] ---------------------------\n" +
       "**ID:**          ${event_definition_id}  \n" +
       "**Type:**        ${event_definition_type}  \n" +
@@ -94,6 +99,9 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   @JsonProperty(FIELD_COLOR)
   public abstract String color();
 
+  @JsonProperty(FIELD_CARD_TITLE)
+  public abstract String cardTitle();
+
   @JsonProperty(FIELD_MESSAGE)
   public abstract String message();
 
@@ -129,7 +137,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   }
 
   @AutoValue.Builder
-  public static abstract class Builder implements EventNotificationConfig.Builder<Builder> {
+  public abstract static class Builder implements EventNotificationConfig.Builder<Builder> {
 
     @JsonCreator
     public static Builder create() {
@@ -138,6 +146,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
           .webhookURL("")
           .graylogURL("")
           .color(DEFAULT_COLOR)
+          .cardTitle(DEFAULT_CARD_TITLE)
           .message(DEFAULT_MESSAGE)
           .proxyURL("");
     }
@@ -150,6 +159,9 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
 
     @JsonProperty(FIELD_COLOR)
     public abstract Builder color(String color);
+
+    @JsonProperty(FIELD_CARD_TITLE)
+    public abstract Builder cardTitle(String cardTitle);
 
     @JsonProperty(FIELD_MESSAGE)
     public abstract Builder message(String message);
@@ -166,6 +178,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
         .webhookURL(ValueReference.of(webhookURL()))
         .graylogURL(ValueReference.of(graylogURL()))
         .color(ValueReference.of(color()))
+        .cardTitle(ValueReference.of(cardTitle()))
         .message(ValueReference.of(message()))
         .proxyURL(ValueReference.of(proxyURL()))
         .build();

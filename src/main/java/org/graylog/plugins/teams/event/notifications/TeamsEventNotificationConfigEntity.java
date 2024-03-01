@@ -17,6 +17,7 @@
  */
 package org.graylog.plugins.teams.event.notifications;
 
+import static org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig.FIELD_CARD_TITLE;
 import static org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig.FIELD_COLOR;
 import static org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig.FIELD_GRAYLOG_URL;
 import static org.graylog.plugins.teams.event.notifications.TeamsEventNotificationConfig.FIELD_MESSAGE;
@@ -52,6 +53,9 @@ public abstract class TeamsEventNotificationConfigEntity implements EventNotific
   @JsonProperty(FIELD_COLOR)
   public abstract ValueReference color();
 
+  @JsonProperty(FIELD_CARD_TITLE)
+  public abstract ValueReference cardTitle();
+
   @JsonProperty(FIELD_MESSAGE)
   public abstract ValueReference message();
 
@@ -81,6 +85,9 @@ public abstract class TeamsEventNotificationConfigEntity implements EventNotific
     @JsonProperty(FIELD_COLOR)
     public abstract Builder color(ValueReference color);
 
+    @JsonProperty(FIELD_CARD_TITLE)
+    public abstract Builder cardTitle(ValueReference message);
+
     @JsonProperty(FIELD_MESSAGE)
     public abstract Builder message(ValueReference message);
 
@@ -96,6 +103,7 @@ public abstract class TeamsEventNotificationConfigEntity implements EventNotific
         .webhookURL(webhookURL().asString(parameters))
         .graylogURL(graylogURL().asString(parameters))
         .color(color().asString(parameters))
+        .cardTitle(cardTitle().asString(parameters))
         .message(message().asString(parameters))
         .proxyURL(proxyURL().asString(parameters))
         .build();

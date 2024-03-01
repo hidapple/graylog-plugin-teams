@@ -25,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,18 +47,14 @@ public class TeamsMessageCard {
   private final String themeColor;
   private final String title;
   private final String text;
-  private List<Section> sections;
-  private List<PotentialAction> potentialAction;
+  private List<PotentialAction> potentialAction; // buttons
 
-  public TeamsMessageCard(String color, String title, String text, String detailMsg, List<String> urls) {
+  public TeamsMessageCard(String color, String title, String text, List<String> urls) {
     this.type = "MessageCard";
     this.context = "https://schema.org/extensions";
     this.themeColor = color;
-    this.title = title;
+    this.title = StringUtils.isEmpty(title) ? null : title;
     this.text = text;
-    if (!StringUtils.isEmpty(detailMsg)) {
-      this.sections = Lists.newArrayList(new Section("Detail Message:", detailMsg));
-    }
 
     if (!urls.isEmpty()) {
       this.potentialAction = new ArrayList<>();
@@ -68,7 +65,7 @@ public class TeamsMessageCard {
         target.put("uri", urls.get(0));
 
         this.potentialAction.add(
-            new PotentialAction("OpenUri", numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
+            new PotentialAction(numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
       }
     }
   }
@@ -80,9 +77,6 @@ public class TeamsMessageCard {
     params.put("themeColor", themeColor);
     params.put("title", title);
     params.put("text", text);
-    if (Objects.nonNull(sections)) {
-      params.put("sections", sections);
-    }
     if (Objects.nonNull(potentialAction)) {
       params.put("potentialAction", potentialAction);
     }
@@ -90,22 +84,7 @@ public class TeamsMessageCard {
     try {
       return new ObjectMapper().writeValueAsString(params);
     } catch (JsonProcessingException e) {
-      throw new RuntimeException("Failed to build Teams MessageCard payload as JSON format.");
-    }
-  }
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class Section {
-    @JsonProperty("title")
-    public String title;
-    @JsonProperty("text")
-    public String text;
-
-    @JsonCreator
-    public Section(String title, String text) {
-      this.title = title;
-      this.text = text;
+      throw new IllegalStateException("Failed to build Teams MessageCard payload as JSON format.", e);
     }
   }
 
@@ -120,8 +99,8 @@ public class TeamsMessageCard {
     List<Map<String, String>> targets;
 
     @JsonCreator
-    PotentialAction(String type, String name, List<Map<String, String>> targets) {
-      this.type = type;
+    PotentialAction(String name, List<Map<String, String>> targets) {
+      this.type = "OpenUri";
       this.name = name;
       this.targets = targets;
     }
