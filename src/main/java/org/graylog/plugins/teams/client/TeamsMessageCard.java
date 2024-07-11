@@ -24,86 +24,86 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
- * MessageCard is representing Outlook Actionable Message Card request.
- * https://docs.microsoft.com/en-us/outlook/actionable-messages/message-card-reference
+ * MessageCard is representing Adaptive Card request via Microsoft Workflow webhook.
+ * https://learn.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-reference#adaptive-card
  */
 public class TeamsMessageCard {
 
-  private static final int POTENTIAL_ACTIONS_LIMIT = 3;
-
-  private final String type;
-  private final String context;
-  private final String themeColor;
   private final String title;
+  private final String titleColor;
   private final String text;
-  private List<PotentialAction> potentialAction; // buttons
+  private CardAction action; // only first message is linked
 
-  public TeamsMessageCard(String color, String title, String text, List<String> urls) {
-    this.type = "MessageCard";
-    this.context = "https://schema.org/extensions";
-    this.themeColor = color;
+  public TeamsMessageCard(String title, String titleColor, String text, String firstMessageUrl) {
     this.title = StringUtils.isEmpty(title) ? null : title;
+    this.titleColor = titleColor;
     this.text = text;
 
-    if (!urls.isEmpty()) {
-      this.potentialAction = new ArrayList<>();
-      final int numberOfPotentialActions = Math.min(urls.size(), POTENTIAL_ACTIONS_LIMIT);
-      for (int i = 1; i <= numberOfPotentialActions; i++) {
-        final Map<String, String> target = new HashMap<>();
-        target.put("os", "default");
-        target.put("uri", urls.get(0));
-
-        this.potentialAction.add(
-            new PotentialAction(numberOfPotentialActions > 1 ? "Open Graylog - message " + i : "Open Graylog", Lists.newArrayList(target)));
-      }
+    if (firstMessageUrl != null && !firstMessageUrl.isBlank()) {
+      this.action = new CardAction("Open Graylog", firstMessageUrl);
     }
   }
 
   public String toJsonString() {
-    Map<String, Object> params = new HashMap<>();
-    params.put("@type", type);
-    params.put("@context", context);
-    params.put("themeColor", themeColor);
-    params.put("title", title);
-    params.put("text", text);
-    if (Objects.nonNull(potentialAction)) {
-      params.put("potentialAction", potentialAction);
+    final Map<String, Object> titleBlock = new HashMap<>();
+    titleBlock.put("type", "TextBlock");
+    titleBlock.put("size", "Medium");
+    titleBlock.put("weight", "Bolder");
+    titleBlock.put("text", this.title);
+    titleBlock.put("color", this.titleColor);
+    final Map<String, Object> descBlock = new HashMap<>();
+    descBlock.put("type", "TextBlock");
+    descBlock.put("text", this.text);
+    descBlock.put("wrap", true);
+
+    final Map<String, Object> content = new HashMap<>();
+    content.put("$schema", "https://adaptivecards.io/schemas/adaptive-card.json");
+    content.put("type", "AdaptiveCard");
+    content.put("version", "1.2");
+    content.put("msteams", Map.of("width", "full")); // needed for proper card width in Teams
+    content.put("body", List.of(titleBlock, descBlock));
+    if (action != null) {
+      content.put("actions", List.of(action));
     }
 
+    final Map<String, Object> attachment = new HashMap<>();
+    attachment.put("contentType", "application/vnd.microsoft.card.adaptive");
+    attachment.put("content", content);
+
+    final Map<String, Object> request = new HashMap<>();
+    request.put("type", "message");
+    request.put("attachments", List.of(attachment));
+
     try {
-      return new ObjectMapper().writeValueAsString(params);
+      return new ObjectMapper().writeValueAsString(request);
     } catch (JsonProcessingException e) {
-      throw new IllegalStateException("Failed to build Teams MessageCard payload as JSON format.", e);
+      throw new IllegalStateException("Failed to build TeamsMessageCard payload as JSON format.", e);
     }
   }
 
   @JsonInclude(Include.NON_NULL)
   @JsonIgnoreProperties(ignoreUnknown = true)
-  public static class PotentialAction {
-    @JsonProperty("@type")
+  public static class CardAction {
+    @JsonProperty("type")
     String type;
-    @JsonProperty("name")
-    String name;
-    @JsonProperty("targets")
-    List<Map<String, String>> targets;
+    @JsonProperty("title")
+    String title;
+    @JsonProperty("url")
+    String url;
 
     @JsonCreator
-    PotentialAction(String name, List<Map<String, String>> targets) {
-      this.type = "OpenUri";
-      this.name = name;
-      this.targets = targets;
+    CardAction(String title, String url) {
+      this.type = "Action.OpenUrl";
+      this.title = title;
+      this.url = url;
     }
   }
-
 }

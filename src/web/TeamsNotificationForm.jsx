@@ -110,7 +110,7 @@ class TeamsNotificationForm extends React.Component {
           help={lodash.get(
             validation,
             "errors.graylog_url[0]",
-            "URL to be attached in notification"
+            "URL to be attached in notification - if no URL is filled, the button 'Open Graylog' will not be added"
           )}
           value={config.graylog_url || ""}
           onChange={this.handleChange}
@@ -118,11 +118,11 @@ class TeamsNotificationForm extends React.Component {
         <Input
           id="notification-color"
           name="color"
-          label="Color"
+          label="Title color"
           type="text"
           bsStyle={validation.errors.color ? "error" : null}
-          help={lodash.get(validation, "errors.color[0]", "Color code")}
-          value={config.color || ""}
+          help={lodash.get(validation, "errors.color[0]", "Title Color - Good / Warning / Attention")}
+          value={config.color || "Warning"}
           onChange={this.handleChange}
         />
         <Input
@@ -149,7 +149,7 @@ class TeamsNotificationForm extends React.Component {
           help={lodash.get(
             validation,
             "errors.message[0]",
-            "Detail message supporting basic Markdown syntax"
+            "Detail message supports basic Markdown syntax. Create dynamic content using JMTE syntax."
           )}
           value={config.message || ""}
           rows={15}

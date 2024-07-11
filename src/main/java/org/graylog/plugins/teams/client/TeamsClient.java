@@ -24,10 +24,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.inject.Inject;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -61,7 +59,7 @@ public class TeamsClient {
 
     // Create request
     final HttpUrl url = HttpUrl.parse(config.webhookURL());
-    if (Objects.isNull(url)) {
+    if (url == null) {
       throw new TeamsClientException("Teams webhook URL is invalid format. URL=" + config.webhookURL());
     }
     final RequestBody reqBody = RequestBody.create(MediaType.get("application/json"), createRequest(config, model).toJsonString());
@@ -83,22 +81,21 @@ public class TeamsClient {
   }
 
   private TeamsMessageCard createRequest(final TeamsEventNotificationConfig config, final Map<String, Object> model) {
-    final List<String> graylogMsgUrls = new ArrayList<>();
     final Object backlog = model.get("backlog");
-    final String graylogUrl = config.graylogURL().endsWith("/") ? config.graylogURL() : config.graylogURL() + "/";
-    if (backlog instanceof List) {
-      for (final Map<String, Object> msgSummary : (List<Map<String, Object>>) backlog) {
-        graylogMsgUrls.add(graylogUrl + "messages/" + msgSummary.get("index") + "/" + msgSummary.get("id"));
+    String graylogMsgUrl = null;
+    if (!Strings.isNullOrEmpty(config.graylogURL()) && backlog instanceof List) {
+      final Map<String, Object> firstMsgSummary = ((List<Map<String, Object>>) backlog).stream().findFirst().orElse(null);
+      if (firstMsgSummary != null) {
+        final String graylogUrl = config.graylogURL().endsWith("/") ? config.graylogURL() : config.graylogURL() + "/";
+        graylogMsgUrl = graylogUrl + "messages/" + firstMsgSummary.get("index") + "/" + firstMsgSummary.get("id");
       }
-    } else {
-      graylogMsgUrls.add(graylogUrl);
     }
 
     return new TeamsMessageCard(
-        config.color(),
         buildTemplateText(config.cardTitle(), TeamsEventNotificationConfig.DEFAULT_CARD_TITLE, model),
+        config.color(),
         buildTemplateText(config.message(), TeamsEventNotificationConfig.DEFAULT_MESSAGE, model),
-        graylogMsgUrls
+        graylogMsgUrl
     );
   }
 

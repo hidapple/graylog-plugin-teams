@@ -22,17 +22,22 @@ Restart `graylog-server` and you are done.
 Usage
 -----
 
-#### 1. Publish Teams incoming webhook
-First of all, you need to publish your Teams incoming webhook. See [Microsoft docs](https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/connectors/connectors-using)
-to know detail and how to publish your Teams incoming webhook.
+#### 1. Create Microsoft Workflow
+First of all, you need to create [Workflow](https://support.microsoft.com/en-us/office/browse-and-add-workflows-in-microsoft-teams-4998095c-8b72-4b0e-984c-f2ad39e6ba9a)
+in Teams to 'Post to a channel when a webhook request is received'. See more about [Teams webhook](https://learn.microsoft.com/en-us/connectors/teams/?tabs=text1#microsoft-teams-webhook).
+Save the URL webhook for step 3 (you can also display it later in edit mode).
+
+To use Microsoft Workflow you need plugin version 2.1.0 and above.
 
 #### 2. Create Graylog notification
 Create Graylog notification and choose `Microsoft Teams Notification V2` as Notification type.
 
 #### 3. Configure Microsoft Teams Notification
-Input your Teams incoming webhook published at #1 and fill out other configurations. Here is a screenshot of configuration example.
+Input your Teams incoming webhook created at #1 and fill out other configurations. Here is a screenshot of configuration example.
 
-![Teams notification configuraiton](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/configuration.png)
+![Teams notification configuration](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/configuration.png)
+
+To format the AdaptiveCard see [How to format card content](https://learn.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-format)
 
 #### 4. Create Graylog Event Definitions
 Create Graylog Event definition and set Microsoft Teams Notification you created at #3 as its Notification.
@@ -41,6 +46,12 @@ Create Graylog Event definition and set Microsoft Teams Notification you created
 You will receive notification message like below.
 
 ![Teams notification message](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/message.png)
+
+Migration
+------------
+
+If you use version 2.0.x or lesser and you want to use 2.1.0 and above you need to reconfigure the the webhook to use Microsoft Workflow
+and update the webhook URL - you might need to update message as syntax for Teams cards changed see Usage step #3 above.
 
 Contribution
 ------------
@@ -55,7 +66,7 @@ Contribution
 Getting development started
 ---------------------------
 
-This project is using Maven 3 and requires Java 8 or higher.
+This project is using Maven 3 and requires Java 17 or higher.
 
 * Clone this repository.
 * Run `mvn package` to build a JAR file.
