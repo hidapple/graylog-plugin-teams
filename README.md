@@ -38,6 +38,7 @@ Input your Teams incoming webhook created at #1 and fill out other configuration
 ![Teams notification configuration](https://github.com/hidapple/graylog-plugin-teams/blob/main/img/configuration.png)
 
 To format the AdaptiveCard see [How to format card content](https://learn.microsoft.com/en-us/microsoftteams/platform/task-modules-and-cards/cards/cards-format)
+you can also test in [interactive design](https://adaptivecards.io/designer/) within `TextBlock` element - select host app `Microsoft Teams` and target version `1.4`.
 
 #### 4. Create Graylog Event Definitions
 Create Graylog Event definition and set Microsoft Teams Notification you created at #3 as its Notification.
