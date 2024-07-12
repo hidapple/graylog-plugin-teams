@@ -32,14 +32,37 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithoutDetailMsgAndGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text", new ArrayList<>());
-    String expected = "{"
-        + "\"@type\":\"MessageCard\","
-        + "\"@context\":\"https://schema.org/extensions\","
-        + "\"themeColor\":\"0076D7\","
-        + "\"title\":\"Title\","
-        + "\"text\":\"Text\""
-        + "}";
+    TeamsMessageCard sut = new TeamsMessageCard("Title", "Warning", "Text", null);
+    String expected = """
+        {
+         "type": "message",
+         "attachments": [
+          {
+           "contentType": "application/vnd.microsoft.card.adaptive",
+           "content": {
+            "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.2",
+            "msteams": { "width": "full" },
+            "body": [
+             {
+              "size": "Medium",
+              "color": "Warning",
+              "weight": "Bolder",
+              "text": "Title",
+              "type": "TextBlock"
+             },
+             {
+              "text": "Text",
+              "type": "TextBlock",
+              "wrap": true
+             }
+            ]
+           }
+          }
+         ]
+        }
+        """.trim();
 
     // When
     String actual = sut.toJsonString();
@@ -50,23 +73,45 @@ class TeamsMessageCardTest {
 
   @Test
   void toJsonString_WithGraylogURL() throws IOException {
-    TeamsMessageCard sut = new TeamsMessageCard("0076D7", "Title", "Text",
-        Lists.newArrayList("http://localhost:9000/messages/index/id"));
-    String expected = "{"
-        + "\"@type\":\"MessageCard\","
-        + "\"@context\":\"https://schema.org/extensions\","
-        + "\"themeColor\":\"0076D7\","
-        + "\"title\":\"Title\","
-        + "\"text\":\"Text\","
-        + "\"potentialAction\":[{"
-        + "\"@type\":\"OpenUri\","
-        + "\"name\":\"Open Graylog\","
-        + "\"targets\":[{"
-        + "\"os\":\"default\","
-        + "\"uri\":\"http://localhost:9000/messages/index/id\""
-        + "}]"
-        + "}]"
-        + "}";
+    TeamsMessageCard sut = new TeamsMessageCard("Title", "Warning", "Text",
+        "http://localhost:9000/messages/index/id");
+    String expected = """
+        {
+         "type": "message",
+         "attachments": [
+          {
+           "contentType": "application/vnd.microsoft.card.adaptive",
+           "content": {
+            "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.2",
+            "msteams": { "width": "full" },
+            "body": [
+             {
+              "size": "Medium",
+              "color": "Warning",
+              "weight": "Bolder",
+              "text": "Title",
+              "type": "TextBlock"
+             },
+             {
+              "text": "Text",
+              "type": "TextBlock",
+              "wrap": true
+             }
+            ],
+            "actions": [
+             {
+              "type":"Action.OpenUrl",
+              "title":"Open Graylog",
+              "url":"http://localhost:9000/messages/index/id"
+             }
+            ]
+           }
+          }
+         ]
+        }
+        """.trim();
 
     // When
     String actual = sut.toJsonString();

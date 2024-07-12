@@ -58,36 +58,38 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   /**
    * Card body
    */
-  public static final String DEFAULT_MESSAGE = "# --- [Event Definition] ---------------------------\n" +
-      "**ID:**          ${event_definition_id}  \n" +
-      "**Type:**        ${event_definition_type}  \n" +
-      "**Title:**       ${event_definition_title}  \n" +
-      "**Description:** ${event_definition_description}  \n" +
-      "****# --- [Event] --------------------------------------  \n" +
-      "**Event:**                ${event}\n  " +
-      "****# --- [Event Detail] -------------------------------  \n" +
-      "**Timestamp:**            ${event.timestamp}\n  " +
-      "**Message:**              ${event.message}\n  " +
-      "**Source:**               ${event.source}\n  " +
-      "**Key:**                  ${event.key}\n  " +
-      "**Priority:**             ${event.priority}\n  " +
-      "**Alert:**                ${event.alert}\n  " +
-      "**Timestamp Processing:** ${event.timestamp}\n  " +
-      "**TimeRange Start:**      ${event.timerange_start}\n  " +
-      "**TimeRange End:**        ${event.timerange_end}\n  " +
-      "${if event.fields}\n" +
-      "**Fields:**\n  " +
-      "${foreach event.fields field}  ${field.key}: ${field.value}  \n" +
-      "${end}\n" +
-      "${if backlog}\n" +
-      "# --- [Backlog] ------------------------------------  \n" +
-      "**Messages:**  " +
-      "${foreach backlog message}\n" +
-      "```\n" +
-      "${message}  \n" +
-      "```\n" +
-      "${end}\n" +
-      "${end}";
+  public static final String DEFAULT_MESSAGE = """
+      # --- [Event Definition] ---------------------------
+      **ID:**          ${event_definition_id}
+      **Type:**        ${event_definition_type}
+      **Title:**       ${event_definition_title}
+      **Description:** ${event_definition_description}
+      ****# --- [Event] --------------------------------------
+      **Event:**                ${event}
+      ****# --- [Event Detail] -------------------------------
+      **Timestamp:**            ${event.timestamp}
+      **Message:**              ${event.message}
+      **Source:**               ${event.source}
+      **Key:**                  ${event.key}
+      **Priority:**             ${event.priority}
+      **Alert:**                ${event.alert}
+      **Timestamp Processing:** ${event.timestamp}
+      **TimeRange Start:**      ${event.timerange_start}
+      **TimeRange End:**        ${event.timerange_end}
+      ${if event.fields}
+      **Fields:**
+      ${foreach event.fields field}  ${field.key}: ${field.value}
+      ${end}
+      ${if backlog}
+      # --- [Backlog] ------------------------------------
+      **Messages:**
+      ${foreach backlog message}
+      ```
+      ${message}
+      ```
+      ${end}
+      ${end}
+      """;
 
   @JsonProperty(FIELD_WEBHOOK_URL)
   @NotBlank
@@ -97,7 +99,7 @@ public abstract class TeamsEventNotificationConfig implements EventNotificationC
   public abstract String graylogURL();
 
   @JsonProperty(FIELD_COLOR)
-  public abstract String color();
+  public abstract String color(); // title color
 
   @JsonProperty(FIELD_CARD_TITLE)
   public abstract String cardTitle();
