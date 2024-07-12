@@ -67,7 +67,7 @@ public class TeamsMessageCard {
     final Map<String, Object> content = new HashMap<>();
     content.put("$schema", "https://adaptivecards.io/schemas/adaptive-card.json");
     content.put("type", "AdaptiveCard");
-    content.put("version", "1.2");
+    content.put("version", "1.4"); // 1.4 is latest that works in Teams app
     content.put("msteams", Map.of("width", "full")); // needed for proper card width in Teams
     content.put("body", List.of(titleBlock, descBlock));
     if (action != null) {
