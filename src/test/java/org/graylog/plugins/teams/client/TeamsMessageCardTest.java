@@ -42,7 +42,7 @@ class TeamsMessageCardTest {
            "content": {
             "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
             "type": "AdaptiveCard",
-            "version": "1.2",
+            "version": "1.4",
             "msteams": { "width": "full" },
             "body": [
              {
@@ -84,7 +84,7 @@ class TeamsMessageCardTest {
            "content": {
             "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
             "type": "AdaptiveCard",
-            "version": "1.2",
+            "version": "1.4",
             "msteams": { "width": "full" },
             "body": [
              {
